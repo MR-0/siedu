@@ -15,7 +15,7 @@ export const App = () => {
           <City />
         </DataProvider>
       </ConfigProvider>
-      <p>v.1.0.0</p>
+      <p>v.1.1.0</p>
     </div>
   );
 };
