@@ -44,7 +44,6 @@ const Head = ({ number, name }) => {
 const Body = ({ indicators }) => {
   const { row, col2, col4 } = els;
   const { body, bars, description } = style;
-  console.log(indicators);
   const worst = indicators
     // .filter(d => d.median > 0)
     // Only no city level

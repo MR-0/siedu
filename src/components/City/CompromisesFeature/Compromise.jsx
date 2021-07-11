@@ -143,9 +143,12 @@ class Chart extends Component {
         const oldClassification = this.getIndicatorClass(d.normalOldMedian);
         const oldInd = keys.indexOf(oldClassification);
 
-        if (currentInd > oldInd) return 'a';
-        if (currentInd < oldInd) return 'b';
-        if (currentInd === oldInd) return 'c';
+        if (d.normalOldMedian) {
+          if (currentInd > oldInd) return 'a';
+          if (currentInd < oldInd) return 'b';
+          if (currentInd === oldInd) return 'c';
+        }
+        return '';
       })
   }
 

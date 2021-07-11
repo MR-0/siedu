@@ -97,7 +97,8 @@ class Chart extends Component {
         if (value >= 0) return 'verybad';
       }
       return 'undefined';
-    }).map(d => ({ name: d[0], values: d[1] }));
+    }).map(d => ({ name: d[0], values: d[1] }))
+    .filter(d => d.name !== 'undfined');
     const width = w - (min * stack.length);
     const total = sum(stack, d => d.values.length);
     return (() => {
@@ -151,6 +152,8 @@ class Chart extends Component {
       .attr('x', d => d.x + d.width - 10)
       .attr('class', 'evolution-icon')
       .text(d => {
+        console.log(d.old);
+        if (d.old?.name === 'undefined') return '';
         if (!d.values || !d.old?.values) return '';
         return d.values.length === d.old.values.length
           ? 'c'
