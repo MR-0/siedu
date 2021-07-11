@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# SIEDU
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Visualitation panel for Chilean institution SIEDU.
 
 ## Available Scripts
 
