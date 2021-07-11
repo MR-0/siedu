@@ -1,6 +1,7 @@
 import React from 'react';
 import { mean, max, median } from 'd3';
 import { Header } from '../common/Header';
+import { Legend } from '../common/Legend';
 import { Compromise } from './Compromise';
 import { useDataValue } from 'contexts/Data';
 
@@ -29,12 +30,16 @@ export const Breachs = () => {
     // .filter(d => d.median)
     // --> menor es peor
     .sort((a,b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0)
-    // --> los tres peores
-    // .slice(0,3);
+    console.log(worst);
   return (
     <section className="breaches">
-      <Header subtitle="Principales brechas" />
-      { worst.map((d, i) => <Compromise key={i} data={d} /> ) }
+      <Header />
+      <Legend
+        title="Estado general de indicadores por comuna"
+        hidden
+      />
+      <br />
+      { worst.map((d) => <Compromise key={d.key} data={d} /> ) }
     </section>
   )
 };

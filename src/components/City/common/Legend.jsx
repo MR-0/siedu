@@ -2,16 +2,19 @@ import React from 'react';
 import clsx from 'clsx';
 import { styles as els } from 'elementary';
 import styles from './Legend.module.scss';
+import { useConfigValue } from 'contexts/Config';
 
-export const Legend = ({ column, title }) => {
+export const Legend = ({ column, title, hidden }) => {
+  const { year } = useConfigValue()
   return (
     <div className={ clsx(els.row, styles.legend) }>
       <div className={ clsx(els.col2, els.textRight) }>
         <h4>{ column }</h4>
       </div>
       <div className={ els.col4 }>
-        <h4>{ title }</h4>
-        <div className={ styles.symbols }>
+        <h4>{ title } - <b>{ year }</b></h4>
+        { !hidden && (
+          <div className={ styles.symbols }>
           <table>
             <tbody>
               <tr>
@@ -88,6 +91,7 @@ export const Legend = ({ column, title }) => {
             </tbody>
           </table>
         </div>
+        )}
       </div>
     </div>
   );

@@ -48,6 +48,7 @@ const Body = ({ indicators }) => {
     // .filter(d => d.median > 0)
     // Only no city level
     .filter(d => !d.hasOnlyCity)
+    .filter(d => d.values.length)
     .sort((a, b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0)
   const worstest = worst[0];
   const worstestValues = worstest?.values
@@ -80,7 +81,7 @@ const Body = ({ indicators }) => {
                 max={nationalMax}
               />
               {worstestValues
-                .map((d, i) => <Bar key={i} data={d} max={nationalMax} />
+                .map((d) => <Bar key={d.code +'-'+ d.commune +'-'+ d.year} data={d} max={nationalMax} />
                 )}
               <Bar
                 className="small gray"
@@ -111,10 +112,11 @@ const Standard = ({ value, max, base }) => {
   useEffect(() => {
     const rect = svg.current.getBoundingClientRect().toJSON();
     const { width, height } = rect;
+    const result = base + (width - base) * value / max;
     const bar = select(svg.current)
       .append('line')
-      .attr('x1', base + (width - base) * value / max)
-      .attr('x2', base + (width - base) * value / max)
+      .attr('x1', (max && result) || 0)
+      .attr('x2', (max && result) || 0)
       .attr('y1', 0)
       .attr('y2', height)
       .attr('stroke', '#000')
@@ -137,6 +139,8 @@ const Bar = ({ className, data, max }) => {
   const { bar } = style;
   const { communeName: name, intentded: value, value: real } = data;
   const old = data.old?.intentded;
+
+  console.log(old);
 
   return (
     <li className={clsx(bar, row, middle, gutSm, className)}>

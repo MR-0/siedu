@@ -44,19 +44,19 @@ export const SVGBar = ({ className, value, real, max, old }) => {
 
     if (real !== undefined) {
       text.append('tspan').text(real === null ? 'Sin valor' : real);
-      if (old !== undefined) {
-        text
-          .append('tspan')
-          .attr('class', 'evolution-icon ' + icon)
-          .attr('dy', '0.15em')
-          .attr('dx', '0.1em')
-          .text(value === old
+      text
+        .append('tspan')
+        .attr('class', 'evolution-icon ' + icon)
+        .attr('dy', '0.15em')
+        .attr('dx', '0.1em')
+        .text(() => {
+          if (old === undefined || old === null) return '';
+          return value === old
             ? 'c'
             : value > old
             ? 'a'
             : 'b'
-          );
-      }
+        });
     }
 
     setElements({ bar, text });

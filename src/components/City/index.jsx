@@ -11,14 +11,11 @@ import { Compromises } from './Compromises';
 import styles from './City.module.scss';
 
 // TODO:
-// - Quiitar indicador de evolución en 2018 - para todas las instancias
-//   donde no hay año anterior
-// - Subitulos de misma jerarquia y agregar año
 // - Imprimir 2 breachs por sección
 // - Agregar iconos pequeõs de evolución en leyenda general
 // - Imprimir iconos breachas (bogfix)
 // - Revisar caracteres en impresión (bogfix)
-// - Section overflow hidden - for production
+// - Section overflow hidden (production only)
 
 export const City = () => {
   const { city: cityStyle } = styles;

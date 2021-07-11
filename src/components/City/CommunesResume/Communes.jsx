@@ -152,7 +152,6 @@ class Chart extends Component {
       .attr('x', d => d.x + d.width - 10)
       .attr('class', 'evolution-icon')
       .text(d => {
-        console.log(d.old);
         if (d.old?.name === 'undefined') return '';
         if (!d.values || !d.old?.values) return '';
         return d.values.length === d.old.values.length
