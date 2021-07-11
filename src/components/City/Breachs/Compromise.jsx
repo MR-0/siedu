@@ -1,0 +1,150 @@
+import React, { useEffect, useRef } from 'react';
+import { max, median, select } from 'd3';
+import clsx from 'clsx';
+import { SVGBar } from '../common/SVGBar';
+import { styles as els } from 'elementary';
+import style from './Compromise.module.scss';
+
+export const Compromise = ({ data }) => {
+  const { holder } = style;
+  const { number, name, indicators, noIndicatorsBreachesMsg } = data;
+  return (
+    <div className={holder}>
+      <Head number={number} name={name} />
+      { !!indicators.length && <Body indicators={indicators} /> }
+      { !indicators.length && (
+        <div>
+          <br />
+          <p className={ els.textCenter }>{noIndicatorsBreachesMsg}</p>
+        </div>
+      ) }
+    </div>
+  )
+}
+
+const Head = ({ number, name }) => {
+  const { head } = style;
+  const { row, middle, col1, col2, col3, gutSm } = els;
+  const padNumber = String(number).padStart(2, '0');
+  return (
+    <div className={head}>
+      <div className={clsx(row, middle)}>
+        <div className={col2}>
+          <h4>Compromiso {padNumber}</h4>
+        </div>
+        <div className={clsx(col3, gutSm)}>
+          <p>{name}</p>
+        </div>
+        <div className={col1}>&nbsp;</div>
+      </div>
+    </div>
+  );
+};
+
+const Body = ({ indicators }) => {
+  const { row, col2, col4 } = els;
+  const { body, bars, description } = style;
+  console.log(indicators);
+  const worst = indicators
+    // .filter(d => d.median > 0)
+    // Only no city level
+    .filter(d => !d.hasOnlyCity)
+    .sort((a, b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0)
+  const worstest = worst[0];
+  const worstestValues = worstest?.values
+    .sort((a, b) => {
+      return a.intentded > b.intentded ? 1 : a.intentded < b.intentded ? -1 : 0
+    }) 
+    .slice(0,10) || [];
+  const standard = true;
+
+  if (worstest) {
+    const { attributeIcon, nationalMax, nationalMedian } = worstest;
+    return (
+      <div className={body}>
+        <div className={row}>
+          <div className={clsx(description, col2)}>
+            <i>
+              <img src={'./images/icons/' + attributeIcon} />
+            </i>
+            <h4>{worstest.compromiseName}</h4>
+            <p>{worstest.description}</p>
+          </div>
+          <div className={col4}>
+            <ul className={bars}>
+              <Bar
+                className="small gray"
+                data={{
+                  communeName: 'Mejor indicador nacional',
+                  intentded: nationalMax
+                }}
+                max={nationalMax}
+              />
+              {worstestValues
+                .map((d, i) => <Bar key={i} data={d} max={nationalMax} />
+                )}
+              <Bar
+                className="small gray"
+                data={{
+                  communeName: 'Media nacional',
+                  intentded: nationalMedian
+                }}
+                max={nationalMax}
+              />
+            </ul>
+            {standard && (
+              <Standard value={nationalMedian} max={nationalMax} base={5} />
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+const Standard = ({ value, max, base }) => {
+  const svg = useRef();
+  const { row, col3, gutSm } = els;
+  const { mean } = style;
+
+  useEffect(() => {
+    const rect = svg.current.getBoundingClientRect().toJSON();
+    const { width, height } = rect;
+    const bar = select(svg.current)
+      .append('line')
+      .attr('x1', base + (width - base) * value / max)
+      .attr('x2', base + (width - base) * value / max)
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke', '#000')
+  }, []);
+
+  return (
+    <div className={mean}>
+      <div className={clsx(row, gutSm)}>
+        <div className={col3}>&nbsp;</div>
+        <div className={col3}>
+          <svg ref={svg}></svg>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const Bar = ({ className, data, max }) => {
+  const { row, middle, col3, gutSm } = els;
+  const { bar } = style;
+  const { communeName: name, intentded: value, value: real } = data;
+  const old = data.old?.intentded;
+
+  return (
+    <li className={clsx(bar, row, middle, gutSm, className)}>
+      <h5 className={col3}>{name}</h5>
+      <div className={col3}>
+        <SVGBar {...{ className, value, real, max, old }} />
+      </div>
+    </li>
+  )
+}

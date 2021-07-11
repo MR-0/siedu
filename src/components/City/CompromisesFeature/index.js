@@ -1,0 +1,1 @@
+export { CompromisesFeature } from './CompromisesFeature';

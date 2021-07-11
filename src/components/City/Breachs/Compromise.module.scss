@@ -1,0 +1,84 @@
+@import 'styles/presets.scss';
+
+.holder {
+  margin-bottom: 2rem;
+  border: 1px solid #889;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.head {
+  padding: 1rem 3rem;
+  background-color: #889;
+  color: #fff;
+
+  h4 {
+    margin-bottom: 0;
+    font-size: 1.8rem;
+    line-height: 1.2em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.body {
+  padding: 2rem 3rem;
+}
+
+.description {
+  i {
+    display: block;
+    width: 40px;
+    margin-bottom: 1rem;
+  }
+  h4 {
+    font-size: 1.8rem;
+  }
+}
+
+.bars {
+  z-index: 10;
+}
+
+.bar {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-right: -1rem;
+
+  h5 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 400;
+    text-align: right;
+    line-height: 1.2em;
+    letter-spacing: 0.05em;
+  }
+}
+
+.mean {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 20;
+
+  & > div {
+    height: 100%;
+  }
+
+  svg {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  svg line {
+    stroke: $tint-gray;
+    stroke-dasharray: 2 4;
+  }
+}

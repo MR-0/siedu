@@ -1,0 +1,1 @@
+export { ReactComponent as PlanetIcon } from './planet.svg';

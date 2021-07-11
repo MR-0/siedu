@@ -1,0 +1,40 @@
+@import 'styles/presets.scss';
+
+.holder {
+	display: flex;
+	margin-bottom: 2rem;
+	align-items: center;
+	border: 1px solid $tint-gray;
+	border-radius: 0.5rem;
+}
+
+.label {
+	margin: 0;
+	padding: 0 1rem;
+	white-space: nowrap;
+}
+
+.input {
+	border: none;
+}
+
+.wrong {
+	border-color: $tint-wrong;
+	animation: buzz 66ms 10;
+
+	.input {
+		color: $tint-wrong;
+	}
+}
+
+@keyframes buzz {
+	0% {
+		transform: translateX(-1px);
+	}
+	50% {
+		transform: translateX(1px);
+	}
+	100% {
+		transform: translateX(-1px);
+	}
+}

@@ -1,0 +1,76 @@
+@import 'styles/presets.scss';
+
+.legend {
+  h4 {
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: 0.025em;
+    color: $tint-gray;
+  }
+}
+
+.symbols {
+  padding: 0.5rem;
+  margin: 0 0 0.5rem;
+  border: 1px solid fade-out($tint-gray, 0.6);
+  font-size: 0.5rem;
+  letter-spacing: 0.05em;
+  line-height: 1.2em;
+
+  th,
+  td {
+    padding: 0 0.75rem;
+    border: none;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    i {
+      display: inline-block;
+      width: 1.5rem;
+      height: 1.75rem;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    span {
+      display: inline-block;
+      white-space: normal;
+      vertical-align: middle;
+    }
+  }
+
+  th:before {
+    content: '';
+    display: inline-block;
+    height: 1.75rem;
+    vertical-align: middle;
+  }
+
+  .verybad {
+    background-color: #ef6350;
+  }
+  .bad {
+    background-color: #f5a196;
+  }
+  .mid {
+    background-color: #fcdad5;
+  }
+  .good {
+    background-color: #a8c366;
+  }
+  .empty {
+    background-color: #fff;
+    border: 1px solid fade-out($tint-gray, 0.6);
+  }
+  .grayUp {
+    background-color: #888;
+  }
+  .grayDown {
+    background-color: #888;
+  }
+  .grayEqual {
+    background-color: #888;
+  }
+}

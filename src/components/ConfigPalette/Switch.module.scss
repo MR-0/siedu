@@ -1,0 +1,52 @@
+.switch {
+  display: flex;
+  align-items: center;
+
+  a.label {
+    padding: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+
+  a.selected {
+    opacity: 1;
+  }
+
+  a.toggle {
+    padding: 1rem;
+    margin: 0 0.5rem;
+    font-size: 0;
+    line-height: 0;
+
+    &:before {
+      content: "";
+      display: block;
+      height: 0.6rem;
+      width: 3rem;
+      border-radius: 9999px;
+      background-color: #fff3;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      height: 1.6rem;
+      width: 1.6rem;
+      border-radius: 9999px;
+      background-color: #fff;
+      transform: translate(-50%, -50%);
+      transition: left ease 0.3s;
+    }
+  }
+
+  &.first a.toggle:after {
+    left: 1rem;
+  }
+
+  &.second a.toggle:after {
+    left: calc(100% - 1rem);
+  }
+}

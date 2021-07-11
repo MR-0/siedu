@@ -1,0 +1,45 @@
+.form {
+	button[type='submit'] {
+		min-width: 100px;
+		transition: padding 0.3s, min-width 0.3s, border-radius 0.3s;
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 20%;
+			left: 20%;
+			padding: calc(30% - 2px);
+			border: 2px solid #fff6;
+			border-top-color: #fff;
+			border-radius: 9999px;
+			opacity: 0;
+			transition: opacity 0.3s 0.3s;
+		}
+	}
+
+	&.loading button[type='submit'] {
+		min-width: 50px;
+		width: 50px;
+		height: 50px;
+		padding: 0;
+		border-radius: 9999px;
+		text-indent: -9999px;
+		font-size: 0;
+		line-height: 0;
+		color: transparent;
+
+		&:before {
+			animation: spin linear 1s infinite;
+			opacity: 1;
+		}
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

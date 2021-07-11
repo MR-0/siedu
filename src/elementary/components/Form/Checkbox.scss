@@ -1,0 +1,51 @@
+@import 'styles/presets.scss';
+
+.input {
+	display: block;
+	height: 0;
+	width: 0;
+	padding: 0;
+	position: absolute;
+	opacity: 0;
+}
+
+.label {
+	margin: 0;
+	padding-left: 3rem;
+
+	&:after,
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0em;
+		left: 0;
+		height: 2rem;
+		width: 2rem;
+		text-align: center;
+	}
+
+	.label:before {
+		display: none;
+	}
+
+	.label:before {
+		border: 1px solid $tint-gray;
+		border-radius: 0.2rem;
+	}
+}
+
+.input:checked + .label:after {
+	content: '✓';
+	display: block;
+	line-height: 2rem;
+}
+
+.wrong {
+	.label {
+		color: $tint-wrong;
+
+		&:before {
+			border-color: $tint-wrong;
+		}
+	}
+}

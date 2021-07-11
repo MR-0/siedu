@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+html,
+body {
+  font-family: 'Roboto';
+}
+
+section {
+  padding: 3rem 0;
+  border-bottom: 1px solid #ccc;
+}
+
+@font-face {
+  font-family: 'evolution-icon';
+  src: url('./fonts/evolution-icon.eot?ji5h36');
+  src: url('./fonts/evolution-icon.eot?ji5h36#iefix')
+      format('embedded-opentype'),
+    url('./fonts/evolution-icon.ttf?ji5h36') format('truetype'),
+    url('./fonts/evolution-icon.woff?ji5h36') format('woff'),
+    url('./fonts/evolution-icon.svg?ji5h36#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.evolution-icon {
+  font-family: 'evolution-icon';
+}
+
+.toprint {
+  width: 750px;
+  padding: 5px 0;
+  font-family: 'Roboto';
+
+  section {
+    max-height: 1000px;
+    margin: 5px;
+    padding: 0;
+    border-bottom: none;
+  }
+
+  img {
+    width: auto !important;
+  }
+
+  svg {
+    font-family: 'Roboto';
+  }
+
+  svg .evolution-icon {
+    font-family: 'evolution-icon';
+  }
+}
