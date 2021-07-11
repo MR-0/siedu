@@ -1,7 +1,7 @@
 # MacOS
 .DS_Store
 
-# Customs
+# Production
 build/
 
 # Logs
