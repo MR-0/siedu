@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { mean, max, median } from 'd3';
 import { Header } from '../common/Header';
 import { Legend } from '../common/Legend';
@@ -29,17 +29,33 @@ export const Breachs = () => {
     })
     // .filter(d => d.median)
     // --> menor es peor
-    .sort((a,b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0)
-    console.log(worst);
+    .sort((a,b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0);
+  const worstChunks = chunks(worst, 2);
+
   return (
-    <section className="breaches">
-      <Header />
-      <Legend
-        title="Estado general de indicadores por comuna"
-        hidden
-      />
-      <br />
-      { worst.map((d) => <Compromise key={d.key} data={d} /> ) }
-    </section>
+    <div className="breaches section">
+      { worstChunks.map((worst, i) => (
+        <section key={i} className="no-line">
+          {!i && (
+            <Fragment>
+              <Header />
+              <Legend
+                title="Principales brechas"
+                hidden
+              />
+              <br />
+            </Fragment>
+          )}
+          { worst.map((d) => <Compromise key={d.key} data={d} /> ) }
+        </section>
+      ))}
+    </div>
   )
 };
+
+const chunks = (arr, size, out = []) => {
+  const part = arr.slice(size);
+  out.push(arr.slice(0, size))
+  if (part.length) chunks(part, size, out);
+  return out;
+}

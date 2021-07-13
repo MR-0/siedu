@@ -5,9 +5,15 @@ body {
   font-family: 'Roboto';
 }
 
-section {
+section,
+.section {
   padding: 3rem 0;
   border-bottom: 1px solid #ccc;
+
+  &.no-line {
+    padding: 0;
+    border-bottom: none;
+  }
 }
 
 @font-face {

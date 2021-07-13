@@ -64,13 +64,14 @@
     background-color: #fff;
     border: 1px solid fade-out($tint-gray, 0.6);
   }
-  .grayUp {
-    background-color: #888;
-  }
-  .grayDown {
-    background-color: #888;
-  }
+  .grayUp,
+  .grayDown,
   .grayEqual {
     background-color: #888;
+    font-size: 12px;
+    line-height: 1.4em;
+    text-align: center;
+    font-style: normal;
+    color: #fff;
   }
 }

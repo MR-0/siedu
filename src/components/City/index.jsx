@@ -11,9 +11,6 @@ import { Compromises } from './Compromises';
 import styles from './City.module.scss';
 
 // TODO:
-// - Imprimir 2 breachs por sección
-// - Agregar iconos pequeõs de evolución en leyenda general
-// - Imprimir iconos breachas (bogfix)
 // - Revisar caracteres en impresión (bogfix)
 // - Section overflow hidden (production only)
 

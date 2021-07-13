@@ -72,15 +72,15 @@ export const Legend = ({ column, title, hidden }) => {
                 <th>
                 </th>
                 <td>
-                  <i className={ styles.grayUp }>&nbsp;</i>
+                  <i className={ styles.grayUp + ' evolution-icon' }>a</i>
                   <span>Sube una categoría</span>
                 </td>
                 <td>
-                  <i className={ styles.grayDown }>&nbsp;</i>
+                  <i className={ styles.grayDown + ' evolution-icon' }>b</i>
                   <span>Baja una categoría</span>
                 </td>
                 <td>
-                  <i className={ styles.grayEqual }>&nbsp;</i>
+                  <i className={ styles.grayEqual + ' evolution-icon' }>c</i>
                   <span>Mantiene la categoría</span>
                 </td>
                 <td>

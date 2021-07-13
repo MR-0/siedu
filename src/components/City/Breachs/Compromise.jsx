@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { max, median, select } from 'd3';
 import clsx from 'clsx';
 import { SVGBar } from '../common/SVGBar';
@@ -42,6 +42,7 @@ const Head = ({ number, name }) => {
 };
 
 const Body = ({ indicators }) => {
+  const [icon, setIcon] = useState(null);
   const { row, col2, col4 } = els;
   const { body, bars, description } = style;
   const worst = indicators
@@ -60,13 +61,24 @@ const Body = ({ indicators }) => {
 
   if (worstest) {
     const { attributeIcon, nationalMax, nationalMedian } = worstest;
+    if (!icon) fetch('./images/icons/' + attributeIcon)
+      .then(response => response.text())
+      .then(result => {
+        const holder = document.createElement('div');
+        holder.innerHTML = result;
+        const svg = select(holder.childNodes[0]);
+        const viewbox = svg.attr('viewBox').split(' ').slice(2);
+        const [width, height] = viewbox.map(d => d * 1);
+        svg.attr('id', null);
+        svg.attr('width', width);
+        svg.attr('height', height);
+        setIcon(svg.node().outerHTML);
+      });
     return (
       <div className={body}>
         <div className={row}>
           <div className={clsx(description, col2)}>
-            <i>
-              <img src={'./images/icons/' + attributeIcon} />
-            </i>
+            <i dangerouslySetInnerHTML={{ __html: icon }}></i>
             <h4>{worstest.compromiseName}</h4>
             <p>{worstest.description}</p>
           </div>
@@ -139,8 +151,6 @@ const Bar = ({ className, data, max }) => {
   const { bar } = style;
   const { communeName: name, intentded: value, value: real } = data;
   const old = data.old?.intentded;
-
-  console.log(old);
 
   return (
     <li className={clsx(bar, row, middle, gutSm, className)}>
