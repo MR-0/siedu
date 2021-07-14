@@ -11,6 +11,7 @@ import { Compromises } from './Compromises';
 import styles from './City.module.scss';
 
 // TODO:
+// - Corregir communes resume paso de data a registros sin data
 // - Revisar caracteres en impresión (bogfix)
 // - Section overflow hidden (production only)
 

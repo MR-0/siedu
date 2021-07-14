@@ -1,0 +1,89 @@
+indicatorId	Name	type	amount
+BPU_20	400 metros de distancia máxima (estándar anglosajón 1/4 milla)	std	400
+BPU_21	No tiene estándar	nostd	
+BPU_22	3.000 metros - estándar de community park	std	3000
+BPU_23	No tiene estándar	nostd	
+BPU_28a	No tiene estándar	nostd	
+BPU_28b	No tiene estándar	nostd	
+BPU_29	Estándar establecido por CNDU (10)	std	10
+BPU_7	1.500 metros de distancia máxima (equivalente a 1 milla estándar internacional)	std	1500
+BPU_8	No tiene estándar	nostd	
+BPU_3	1.000 metros de distancia máxima	std	1000
+BPU_4	Igual o mayor a 1	std	1
+BPU_1	400 metros de distancia máxima (estándar anglosajón 1/4 milla)	std	400
+BPU_25	400 metros de distancia máxima (SECTRA)	std	400
+BPU_26	No tiene estándar	nostd	
+BPU_26*	No tiene estándar	nostd	
+BPU_26b	No tiene estándar	nostd	
+DE_36	Porcentaje mayor o igual a 90%	std	90
+EA_93	No tiene estándar	nostd	
+DE_25	No tiene estándar	nostd	
+DE_33	No tiene estándar	nostd	
+DE_102	No tiene estándar	nostd	
+DE_105	No tiene estándar	nostd	
+DE_28	No tiene estándar	nostd	
+DE_31	No tiene estándar	nostd	
+DE_200	No tiene estándar	nostd	
+DE_201	No tiene estándar	nostd	
+DE_202	No tiene estándar	nostd	
+DE_203	No tiene estándar	nostd	
+EA_42	No tiene estándar	bool	
+EA_47	No tiene estándar	nostd	
+EA_16	Todas las estaciones de la ciudad cumplen la norma (hasta 20 µg/m³)	bool	
+EA_10	No tiene estándar	nostd	
+EA_90	No tiene estándar	nostd	
+EA_8	Mayor a 100 l/hab/día; Menor a 200  l/hab/día	std	200
+EA_9	No tiene estándar	nostd	
+EA_34	Menor a un 1kg/hab/día	std	1
+EA_36	No tiene estándar	nostd	
+EA_35	No tiene estándar	nostd	
+EA_22	No tiene estándar	nostd	
+EA_22a	No tiene estándar	nostd	
+EA_23	No tiene estándar	nostd	
+IP_33a	No tiene estándar	nostd	
+IP_33b	No tiene estándar	nostd	
+IP_33c	No tiene estándar	nostd	
+BPU_24	No tiene estándar	nostd	
+IS_91	No tiene estándar	nostd	
+IS_40	100% de veredas en buen estado	std	100
+BPU_17	No tiene estándar	nostd	
+IS_31	10% equivalente al actual promedio	std	10
+IS_32	No tiene estándar	nostd	
+IS_33	No tiene estándar	nostd	
+IS_34	No tiene estándar	nostd	
+IS_36	No tiene estándar	nostd	
+IS_37	No tiene estándar	nostd	
+EA_33	No tiene estándar	nostd	
+EA_33a	No tiene estándar	nostd	
+IS_39	100% de las unidades vecinales de una comuna con un mínimo de 20% y un máximo de 60% de población vulnerable.	std	100
+IS_39a	No tiene estándar	nostd	
+IS_58	No tiene estándar	nostd	
+IS_20	No tiene estándar	nostd	
+DE_48	No tiene estándar	nostd	
+EA_31	No tiene estándar	nostd	
+IS_5	No tiene estándar	nostd	
+EA_48	No tiene estándar	nostd	
+EA_44	No tiene estándar	nostd	
+EA_201	No tiene estándar	nostd	
+EA_41	No tiene estándar	nostd	
+EA_200	No tiene estándar	nostd	
+IG_1	No tiene estándar	nostd	
+IG_66	No tiene estándar	bool	
+DE_3	Menor o igual al 30%	std	30
+DE_99	No tiene estándar	nostd	
+DE_100	No tiene estándar	nostd	
+DE_101	No tiene estándar	nostd	
+DE_18	Menor al 5%	std	5
+DE_98	No tiene estándar	nostd	
+IP_6	No tiene estándar	nostd	
+IP_34	No tiene estándar	bool	
+IP_34a	No tiene estándar	bool	
+IP_48	No tiene estándar	bool	
+IP_43	No tiene estándar	nostd	
+IP_43a	No tiene estándar	nostd	
+IP_47	No tiene estándar	nostd	
+IP_47a	No tiene estándar	nostd	
+IG_22	El 100% de los proyectos	std	100
+IG_92	No tiene estándar	bool	
+IG_91	No tiene estándar	nostd	
+IG_90	No tiene estándar	nostd	
