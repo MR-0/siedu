@@ -20,12 +20,12 @@ export const useTsvIndicators = (year) => {
         value = value !== 'N/A' ? value : null;
         value = value !== 'Comuna no costera' ? value : null;
         value = value !== 'Sin CITSU' ? value : null;
-        value = value !== 'Sin Zona de Afectación' ? value : null;
         value = value !== 'S/ZCH' ? value : null;
         value = value !== 'Sin ZT' ? value : null;
         // -------------------------
         value = value !== 'SI' ? value : 1;
         value = value !== 'NO' ? value : 0;
+        value = value !== 'Sin Zona de Afectación' ? value : 0;
         // -------------------------
         value = value !== null ? value * 1 : null;
         // -------------------------

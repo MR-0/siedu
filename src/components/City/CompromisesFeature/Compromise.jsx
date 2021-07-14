@@ -133,15 +133,20 @@ class Chart extends Component {
       .attr('fill', 'transparent')
       .attr('stroke', '#aaa');
     this.evolution
-      .data(d => d.values)
+      .data(d => d.values.map(d => {
+        const classification = this.getIndicatorClass(d.normalMedian, d.intent);
+        return { ...d, classification };
+      }))
       .filter(d => d.normalMedian !== undefined)
       .attr('class', 'evolution-icon ' + icon)
       .attr('fill', '#fff')
       .text(d => {
         const keys = Object.keys(fills);
         const currentInd = keys.indexOf(d.classification);
-        const oldClassification = this.getIndicatorClass(d.normalOldMedian);
+        const oldClassification = this.getIndicatorClass(d.normalOldMedian, d.intent);
         const oldInd = keys.indexOf(oldClassification);
+
+        console.log(d, d.classification, oldClassification, currentInd, oldInd);
 
         if (d.normalOldMedian) {
           if (currentInd > oldInd) return 'a';
