@@ -64,8 +64,8 @@ const Body = ({ indicators }) => {
     const { attributeIcon, nationalMax, nationalMedian } = worstest;
     const maxValue = max(worstestValues, d => d.value);
 
-    console.log(standard, maxValue);
-    
+    // console.log(standard, maxValue);
+
     if (!icon) fetch('./images/icons/' + attributeIcon)
       .then(response => response.text())
       .then(result => {
