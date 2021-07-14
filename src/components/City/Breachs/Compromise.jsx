@@ -65,8 +65,6 @@ const Body = ({ indicators }) => {
       ? nationalAbsMax - standard.value
       : standard.value;
 
-    console.log(standard, standardValue, nationalAbsMax);
-
     if (!icon) fetch('./images/icons/' + attributeIcon)
       .then(response => response.text())
       .then(result => {
