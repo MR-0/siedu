@@ -19,9 +19,10 @@ export const Breachs = () => {
           const values = allValues?.filter(d => d.value !== null) || [];
           const nationalValues = allNationalValues?.filter(d => d.value !== null) || [];
           const medianValue = median(values, d => d.intentded);
-          const nationalMax = max(nationalValues, d => d.intentded)
+          const nationalMax = max(nationalValues, d => d.intentded);
+          const nationalAbsMax = max(nationalValues, d => d.value);
           const nationalMedian = median(nationalValues, d => d.intentded);
-          return { ...indicator, values, median: medianValue, nationalMedian, nationalMax }
+          return { ...indicator, values, median: medianValue, nationalMedian, nationalMax, nationalAbsMax }
         })
         .filter(d => d.median || d.median === 0);
       const medianValue = median(indicators, d => d.median);

@@ -60,10 +60,12 @@ const Body = ({ indicators }) => {
   const standard = worstest?.values[0].standard;
 
   if (worstest) {
-    const { attributeIcon, nationalMax, nationalMedian } = worstest;
-    const maxValue = max(worstestValues, d => d.value);
+    const { attributeIcon, nationalMax, nationalAbsMax, nationalMedian } = worstest;
+    const standardValue = standard.intent === 'negative'
+      ? nationalAbsMax - standard.value
+      : standard.value;
 
-    // console.log(standard, maxValue);
+    console.log(standard, standardValue, nationalAbsMax);
 
     if (!icon) fetch('./images/icons/' + attributeIcon)
       .then(response => response.text())
@@ -108,8 +110,8 @@ const Body = ({ indicators }) => {
                 max={nationalMax}
               />
             </ul>
-            {(standard && standard.value !== null) && (
-              <Standard value={standard.value} max={maxValue} base={5} />
+            {(standard && standardValue !== null) && (
+              <Standard value={standardValue} max={nationalAbsMax} base={5} />
             )}
           </div>
         </div>
