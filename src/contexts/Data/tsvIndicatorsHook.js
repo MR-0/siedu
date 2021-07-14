@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { tsv, tsvParse } from 'd3';
 
 import communesPath from 'data/communes.tsv';
+import standarsPath from 'data/standars.tsv';
 
 export const useTsvIndicators = (year) => {
   const url = `./data/indicators_${year}.tsv`;
   const [communes, setCommunes] = useState([]);
+  const [standars, setStandars] = useState([]);
   const [uglyFeatures, setUglyFeatures] = useState([]);
+
   const features = uglyFeatures
     .reduce((out, row, i) => {
       const { cut: commune } = row;
@@ -47,16 +50,26 @@ export const useTsvIndicators = (year) => {
       });
       return out;
     }, [])
+    .map((d) => {
+      const standard = standars.find((dd) => dd.indicatorId === d.code);
+      return { ...d, standard };
+    })
     .filter((d) => d.commune !== undefined);
 
   useEffect(() => {
     (async () => {
       const communes = await tsv(communesPath);
+      const uglyStandars = await tsv(standarsPath);
+      const standars = uglyStandars.map((d) => {
+        const value = d.amount !== '' ? d.amount * 1 : null;
+        return { ...d, value };
+      });
       try {
         const response = await fetch(url);
         const result = await response.text();
         const features = tsvParse(result);
         setCommunes(communes);
+        setStandars(standars);
         setUglyFeatures(features);
       } catch (err) {}
     })();

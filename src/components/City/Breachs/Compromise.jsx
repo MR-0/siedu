@@ -52,15 +52,20 @@ const Body = ({ indicators }) => {
     .filter(d => d.values.length)
     .sort((a, b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0)
   const worstest = worst[0];
+  console.log(worstest);
   const worstestValues = worstest?.values
     .sort((a, b) => {
       return a.intentded > b.intentded ? 1 : a.intentded < b.intentded ? -1 : 0
     }) 
     .slice(0,10) || [];
-  const standard = true;
+  const standard = worstest?.values[0].standard;
 
   if (worstest) {
     const { attributeIcon, nationalMax, nationalMedian } = worstest;
+    const maxValue = max(worstestValues, d => d.value);
+
+    console.log(standard, maxValue);
+    
     if (!icon) fetch('./images/icons/' + attributeIcon)
       .then(response => response.text())
       .then(result => {
@@ -104,8 +109,8 @@ const Body = ({ indicators }) => {
                 max={nationalMax}
               />
             </ul>
-            {standard && (
-              <Standard value={nationalMedian} max={nationalMax} base={5} />
+            {(standard && standard.value !== null) && (
+              <Standard value={standard.value} max={maxValue} base={5} />
             )}
           </div>
         </div>
