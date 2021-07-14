@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { mean, max, median } from 'd3';
+import { mean, max, median, min } from 'd3';
 import { Header } from '../common/Header';
 import { Legend } from '../common/Legend';
 import { Compromise } from './Compromise';
@@ -19,10 +19,11 @@ export const Breachs = () => {
           const values = allValues?.filter(d => d.value !== null) || [];
           const nationalValues = allNationalValues?.filter(d => d.value !== null) || [];
           const medianValue = median(values, d => d.intentded);
+          const nationalAbsMin = min(nationalValues, d => d.value);
           const nationalMax = max(nationalValues, d => d.intentded);
           const nationalAbsMax = max(nationalValues, d => d.value);
           const nationalMedian = median(nationalValues, d => d.intentded);
-          return { ...indicator, values, median: medianValue, nationalMedian, nationalMax, nationalAbsMax }
+          return { ...indicator, values, median: medianValue, nationalMedian, nationalMax, nationalAbsMax, nationalAbsMin }
         })
         .filter(d => d.median || d.median === 0);
       const medianValue = median(indicators, d => d.median);

@@ -62,6 +62,7 @@ export const useTsvIndicators = (year) => {
       const uglyStandars = await tsv(standarsPath);
       const standars = uglyStandars.map((d) => {
         const value = d.amount !== '' ? d.amount * 1 : null;
+        const max = d.max !== '' ? d.max * 1 : null;
         return { ...d, value };
       });
       try {
