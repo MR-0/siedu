@@ -76,7 +76,7 @@ const Body = ({ indicators }) => {
       });
     return (
       <div className={body}>
-        <div className={row}>
+        <div className={clsx(row, els.gutSm)}>
           <div className={clsx(description, col2)}>
             <i dangerouslySetInnerHTML={{ __html: icon }}></i>
             <h4>{worstest.compromiseName}</h4>
@@ -119,7 +119,7 @@ const Body = ({ indicators }) => {
 const Standard = ({ value, max, base }) => {
   const svg = useRef();
   const { row, col3, gutSm } = els;
-  const { mean } = style;
+  const { standard } = style;
 
   useEffect(() => {
     const rect = svg.current.getBoundingClientRect().toJSON();
@@ -135,7 +135,7 @@ const Standard = ({ value, max, base }) => {
   }, []);
 
   return (
-    <div className={mean}>
+    <div className={standard}>
       <div className={clsx(row, gutSm)}>
         <div className={col3}>&nbsp;</div>
         <div className={col3}>
