@@ -58,13 +58,18 @@ const normalizeByGroup = group => {
     }
   });
   const valuesMax = max(values, d => d.normal);
+  const valuesAbsMax = max(values, d => d.value);
   values.map(d => {
+    const isNegative = d.intent === 'negative';
     const intended = valuesMax
       ? valuesMax - d.normal
       : d.normal;
-    d.intentded = d.intent === 'negative'
+    d.intentded = isNegative
       ? intended
       : d.normal;
+    d.standard.value = isNegative
+      ? valuesAbsMax - d.standard.value
+      : d.standard.value;
   });
   return group;
 }

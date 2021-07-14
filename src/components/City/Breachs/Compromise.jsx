@@ -52,7 +52,6 @@ const Body = ({ indicators }) => {
     .filter(d => d.values.length)
     .sort((a, b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0)
   const worstest = worst[0];
-  console.log(worstest);
   const worstestValues = worstest?.values
     .sort((a, b) => {
       return a.intentded > b.intentded ? 1 : a.intentded < b.intentded ? -1 : 0
