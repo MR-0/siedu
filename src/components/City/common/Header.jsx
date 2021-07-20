@@ -5,8 +5,11 @@ import styles from './Header.module.scss';
 import { useConfigValue } from 'contexts/Config';
 
 export const Header = ({ children, subtitle, number }) => {
-  const { city } = useConfigValue();
+  const { city, commune, showCity } = useConfigValue();
   const { header, description, number:numberStyle } = styles;
+  const title = showCity
+    ? city?.name
+    : commune?.name
   
   return (
     <div className={ header }>
@@ -14,7 +17,7 @@ export const Header = ({ children, subtitle, number }) => {
         <div className={ els.col2 }></div>
         <div className={ els.col4 }>
           <h2 className={ clsx(els.textLight, els.textUppercase) }>
-            <span>{ city?.name }</span>
+            <span>{ title || 'Indefinido' }</span>
           </h2>
         </div>
       </div>

@@ -23,22 +23,9 @@ const addToChunk = (setter, arr, chunk) => {
 };
 
 export const Compromises = () => {
-  const { city, cityCommunes } = useConfigValue();
-  const [ chunks, setChunks ] = useState([]);
-
-  // return cityCommunes.map((commune, i) => {
-  //   return <Commune key={i} commune={commune} />
-  // });
-
-  // console.log(city, chunks);
-
-  useEffect(() => {
-    console.log('happens');
-    setChunks([]);
-    return addToChunk(setChunks, cityCommunes.slice(0, 10), []);
-  }, [ cityCommunes ]);
-
-  return city && chunks;
+  const { commune } = useConfigValue();
+  
+  return <Commune commune={commune} />
 };
 
 const Commune = React.memo(({ commune }) => {
