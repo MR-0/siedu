@@ -11,6 +11,9 @@ import { Compromises } from './Compromises';
 import styles from './City.module.scss';
 
 // TODO:
+// - Filtrar info de comuna
+// -- Mostrar nombre comuna en header header
+// -- Mostrar solo datos de dicha comuna
 // - Corregir communes resume paso de data a registros sin data
 // - Revisar caracteres en impresión (bogfix)
 // - Section overflow hidden (production only)
