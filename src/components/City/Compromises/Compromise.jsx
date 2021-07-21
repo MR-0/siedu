@@ -6,8 +6,9 @@ import { SVGBar } from '../common/SVGBar';
 
 import { styles as els } from 'elementary';
 import style from './Compromise.module.scss';
+import clsx from 'clsx';
 
-export const Compromise  = ({ compromise }) => {
+export const Compromise  = ({ compromise, commune }) => {
   const { description, name, indicators, number } = compromise;
   const attributes = groups(indicators, d => d.attribute)
     .map(([name, indicators]) => {
@@ -19,13 +20,19 @@ export const Compromise  = ({ compromise }) => {
       <Header subtitle={ name } number={ number }>
         <p>{ description }</p>
       </Header>
-      { attributes.map((d,i) => <Attribute key={i} data={d} />) }
+      { attributes.map((d,i) => (
+        <Attribute
+          key={i}
+          attribute={d}
+          commune={commune}
+        />
+      )) }
     </section>
   );
 } 
 
-const Attribute = ({ data }) => {
-  const { name, icon, indicators } = data;
+const Attribute = ({ attribute, commune }) => {
+  const { name, icon, indicators } = attribute;
   const iconUrl = `./images/icons/${ icon }`;
   return (
     <div className={ style.compromise }>
@@ -33,21 +40,28 @@ const Attribute = ({ data }) => {
         <i><img src={ iconUrl } alt="Icon" /></i>
         <span>{ name }</span>
       </h4>
-      <div className={ els.row }>
-        { indicators.map((d, i) => <Indicator key={i} data={d} />) }
+      <div className={ clsx(els.row, els.fit) }>
+        { indicators.map((d, i) => (
+          <Indicator key={i} data={d} commune={commune} />
+        )) }
       </div>
     </div>
   )
 }
 
-const Indicator = ({ data }) => {
-  const { description, indicatorId:id, intent, isPrimary } = data;
+const Indicator = ({ data, commune }) => {
   const { metrics } = useDataValue();
-  const { values } = metrics.get(id);
-  // console.log(data, values);
+  const { description, indicatorId } = data;
+  const { values, median, max } = metrics.getAll(indicatorId);
+  const value = values.find(d => d.commune === commune.cut);
+  // console.log(value, max);
   return (
     <div className={ els.col2 }>
-      <SVGBar value={10} real={10} max={30} />
+      <div className="asd">
+        <SVGBar className="small" value={value.old.intentded} max={max} />
+        <SVGBar value={value.intentded} real={value.value} max={max} />
+        <SVGBar className="small gray" value={median} max={max} />
+      </div>
       <p>{ description }</p>
     </div>
   );

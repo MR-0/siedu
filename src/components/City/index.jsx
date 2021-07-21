@@ -24,8 +24,6 @@ export const City = () => {
   const hasCityOrCommune = city || commune;
   const className = clsx(els.container, cityStyle);
 
-  console.log(city, commune);
-
   return (
     <div className={className}>
       <Header />
