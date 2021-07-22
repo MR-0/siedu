@@ -59,7 +59,7 @@ const Indicator = ({ data, commune }) => {
     <div className={ els.col2 }>
       <div className="asd">
         <SVGBar className="small" value={value.old.intentded} max={max} />
-        <SVGBar value={value.intentded} real={value.value} max={max} />
+        <SVGBar value={value.intentded} real={value.value} desc={value.original} max={max} />
         <SVGBar className="small gray" value={median} max={max} />
       </div>
       <p>{ description }</p>

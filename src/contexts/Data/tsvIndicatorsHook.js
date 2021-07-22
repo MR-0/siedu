@@ -15,7 +15,8 @@ export const useTsvIndicators = (year) => {
       const { cut: commune } = row;
       Object.keys(row).map((code) => {
         const place = communes.find((d) => d.cut === commune);
-        let value = row[code];
+        const original = row[code];
+        let value = original;
         // -------------------------
         value = value !== '' ? value : null;
         value = value !== 'S/I' ? value : null;
@@ -43,6 +44,7 @@ export const useTsvIndicators = (year) => {
             communeName: place?.name,
             city: place?.city,
             region: place?.region,
+            original,
             value,
             year,
           });

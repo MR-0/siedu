@@ -19,7 +19,7 @@ const posText = (text, width) => {
     .attr('fill', over ? '#fff' : '#ef6350');
 };
 
-export const SVGBar = ({ className, value, real, max, old }) => {
+export const SVGBar = ({ className, value, real, desc, max, old }) => {
   className = (className || '').split(' ').map(key => style[key]);
   const svg = useRef();
   const { bar:barStyle, icon } = style;
@@ -43,7 +43,9 @@ export const SVGBar = ({ className, value, real, max, old }) => {
     const text = select(svg.current).append('text');
 
     if (real !== undefined) {
-      text.append('tspan').text(real === null ? 'Sin valor' : real);
+      text
+        .append('tspan')
+        .text(real === null ? desc || 'Sin información' : real);
       text
         .append('tspan')
         .attr('class', 'evolution-icon ' + icon)
