@@ -5,7 +5,7 @@ import communesPath from 'data/communes.tsv';
 import standarsPath from 'data/standars.tsv';
 
 export const useTsvIndicators = (year) => {
-  const url = `./data/indicators_${year}.tsv`;
+  const url = `./data/indicators_${year}.tsv?t=${Date.now()}`;
   const [communes, setCommunes] = useState([]);
   const [standars, setStandars] = useState([]);
   const [uglyFeatures, setUglyFeatures] = useState([]);
