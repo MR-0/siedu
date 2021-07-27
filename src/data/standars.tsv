@@ -1,4 +1,4 @@
-indicatorId	Name	type	amount	min	max
+indicatorId	name	type	amount	min	max
 BPU_20	400 metros de distancia máxima (estándar anglosajón 1/4 milla)	std	400		
 BPU_21	No tiene estándar	nostd			
 BPU_22	3.000 metros - estándar de community park	std	3000		
@@ -32,7 +32,7 @@ EA_47	No tiene estándar	nostd
 EA_16	Todas las estaciones de la ciudad cumplen la norma (hasta 20 µg/m³)	bool			
 EA_10	No tiene estándar	nostd			
 EA_90	No tiene estándar	nostd			
-EA_8	Mayor a 100 l/hab/día; Menor a 200  l/hab/día	std	200		
+EA_8	Mayor a 100 l/hab/día; Menor a 200  l/hab/día	std	200		200
 EA_9	No tiene estándar	nostd			
 EA_34	Menor a un 1kg/hab/día	std	1		
 EA_36	No tiene estándar	nostd			
@@ -45,9 +45,9 @@ IP_33b	No tiene estándar	nostd
 IP_33c	No tiene estándar	nostd			
 BPU_24	No tiene estándar	nostd			
 IS_91	No tiene estándar	nostd			
-IS_40	100% de veredas en buen estado	std	100		
+IS_40	100% de veredas en buen estado	std	100		100
 BPU_17	No tiene estándar	nostd			
-IS_31	10% equivalente al actual promedio	std	10		
+IS_31	10% equivalente al actual promedio	std	10		10
 IS_32	No tiene estándar	nostd			
 IS_33	No tiene estándar	nostd			
 IS_34	No tiene estándar	nostd			
@@ -55,7 +55,7 @@ IS_36	No tiene estándar	nostd
 IS_37	No tiene estándar	nostd			
 EA_33	No tiene estándar	nostd			
 EA_33a	No tiene estándar	nostd			
-IS_39	100% de las unidades vecinales de una comuna con un mínimo de 20% y un máximo de 60% de población vulnerable.	std	100		
+IS_39	100% de las unidades vecinales de una comuna con un mínimo de 20% y un máximo de 60% de población vulnerable.	std	100		100
 IS_39a	No tiene estándar	nostd			
 IS_58	No tiene estándar	nostd			
 IS_20	No tiene estándar	nostd			
