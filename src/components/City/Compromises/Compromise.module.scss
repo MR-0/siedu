@@ -27,11 +27,22 @@
 }
 
 .indicator {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   .bars {
     margin-bottom: 0.7rem;
   }
   .bars > div {
     margin-bottom: 0.3rem;
+  }
+  .standard {
+    display: table;
+    padding: 0.2rem 1rem;
+    border-radius: 9999px;
+    background-color: #222;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #fff;
   }
   p {
     font-size: 1.3rem;

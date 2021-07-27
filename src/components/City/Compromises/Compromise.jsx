@@ -75,7 +75,7 @@ const Indicator = ({ data, commune }) => {
       </div>
       <p>{ description }</p>
       { standard.type === 'std' && (
-        <p className={style.standard}>{ standard.name }</p>
+        <p className={style.standard}>Estándar: { standard.name }</p>
       ) }
     </div>
   );
