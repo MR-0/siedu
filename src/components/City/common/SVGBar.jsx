@@ -16,33 +16,66 @@ const posText = (text, width) => {
   text
     .attr('x', over ? width - base : width + base)
     .attr('text-anchor', over ? 'end' : 'start')
-    .attr('fill', over ? '#fff' : '#ef6350');
+  if (!over) text.attr('fill', '#222');
 };
 
-export const SVGBar = ({ className, value, real, desc, max, old }) => {
+export const SVGBar = ({ className, value, real, desc, max, old, std, int }) => {
   className = (className || '').split(' ').map(key => style[key]);
   const svg = useRef();
   const { bar:barStyle, icon } = style;
   const [ elements, setElements ] = useState({});
   const { width, height } = getRect(svg.current, value, max);
   const { bar, text } = elements;
+  const fills = {
+    verybad: '#EF6350',
+    bad: '#F5A196',
+    good: '#FCDAD5',
+    verygood: '#A8C366',
+    undefined: 'transparent'
+  };
+  let cat = 'undefined';
+  if (std) {
+    if (int === 'negative') {
+      if (real > std * 2) cat = 'verybad';
+      if (real > std * 1.5) cat = 'bad';
+      if (real > std) cat = 'good';
+      if (real <= std) cat = 'verygood';
+    }
+    if (int === 'positive') {
+      if (real >= std) cat = 'verygood';
+      if (real < std) cat = 'good';
+      if (real < std * 0.5) cat = 'bad';
+      if (real <= std * 0.25) cat = 'verybad';
+    }
+  }
+  else {
+    if (value >= 1) cat = 'verygood';
+    if (value < 1) cat = 'good';
+    if (value < 0.5) cat = 'bad';
+    if (value < 0.25) cat = 'verybad';
+  }
 
   if (bar) bar
     .attr('x', 0)
     .attr('y', 1)
     .attr('height', height - 2)
-    .attr('width', width);
+    .attr('width', width)
+    .attr('fill', fills[cat]);
 
   if (text) text
     .attr('y', (height + 22) * 0.5)
     .attr('dy', '-0.5em')
-    .call(posText, width)
+    .attr('fill', () => {
+      if (cat === 'good' || cat === 'bad') return '#222';
+      else return '#fff';
+    })
+    .call(posText, width);
 
   useEffect(() => {
     const bar = select(svg.current).append('rect');
     const text = select(svg.current).append('text');
 
-    if (real !== undefined) {
+    if (real !== undefined && !/small/.test(className)) {
       text
         .append('tspan')
         .text(real === null ? desc || 'Sin información' : real);

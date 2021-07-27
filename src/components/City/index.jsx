@@ -11,7 +11,6 @@ import { Compromises } from './Compromises';
 import styles from './City.module.scss';
 
 // TODO:
-// - Pintar las barrras
 // - Imprimir estandar
 // - Corregir communes resume paso de data a registros sin data
 // - Revisar caracteres en impresión (bogfix)
