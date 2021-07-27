@@ -1,5 +1,5 @@
 import React from 'react';
-import { groups, max } from 'd3';
+import { groups } from 'd3';
 import { useDataValue } from 'contexts/Data';
 import { Header } from '../common/Header';
 import { SVGBar } from '../common/SVGBar';
@@ -34,14 +34,24 @@ export const Compromise  = ({ compromise, commune }) => {
 const Attribute = ({ attribute, commune }) => {
   const { name, icon, indicators } = attribute;
   const iconUrl = `./images/icons/${ icon }`;
+  const primary = indicators.find(d => d.isPrimary);
+  const others = indicators.filter(d => !d.isPrimary);
   return (
     <div className={ style.compromise }>
       <h4>
         <i><img src={ iconUrl } alt="Icon" /></i>
         <span>{ name }</span>
       </h4>
+      {primary && (
+        <div>
+          <p>Primario</p>
+          <Indicator data={primary} commune={commune} />
+          <hr />
+          <br />
+        </div>
+      )}
       <div className={ clsx(els.row, els.fit) }>
-        { indicators.map((d, i) => (
+        { others.map((d, i) => (
           <Indicator key={i} data={d} commune={commune} />
         )) }
       </div>
@@ -53,16 +63,20 @@ const Indicator = ({ data, commune }) => {
   const { metrics } = useDataValue();
   const { description, indicatorId } = data;
   const { values, median, max } = metrics.getAll(indicatorId);
-  const value = values.find(d => d.commune === commune.cut);
-  // console.log(value, max);
+  const { value, intentded, original, old, standard } = values.find(d => d.commune === commune.cut);
+  const std = [standard.value, standard.amount * 1];
+  console.log(value, max);
   return (
-    <div className={ els.col2 }>
-      <div className="asd">
-        <SVGBar className="small" value={value.old.intentded} max={max} />
-        <SVGBar value={value.intentded} real={value.value} desc={value.original} max={max} />
-        <SVGBar className="small gray" value={median} max={max} />
+    <div className={ clsx(style.indicator, els.col2) }>
+      <div className={ style.bars }>
+        <SVGBar className="small" value={old.intentded} max={max} std={std} />
+        <SVGBar value={intentded} real={value} desc={original} max={max} std={std} />
+        <SVGBar className="small gray" value={median} max={max} std={std} />
       </div>
       <p>{ description }</p>
+      { standard.type === 'std' && (
+        <p className={style.standard}>{ standard.name }</p>
+      ) }
     </div>
   );
 }

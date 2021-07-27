@@ -25,3 +25,15 @@
     width: auto;
   }
 }
+
+.indicator {
+  .bars {
+    margin-bottom: 0.7rem;
+  }
+  .bars > div {
+    margin-bottom: 0.3rem;
+  }
+  p {
+    font-size: 1.3rem;
+  }
+}
