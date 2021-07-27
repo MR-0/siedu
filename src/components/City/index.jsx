@@ -11,7 +11,8 @@ import { Compromises } from './Compromises';
 import styles from './City.module.scss';
 
 // TODO:
-// - Imprimir estandar
+// - Imprimir linea de estandar
+// - Agregar casos con booleanos
 // - Corregir communes resume paso de data a registros sin data
 // - Revisar caracteres en impresión (bogfix)
 

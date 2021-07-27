@@ -166,14 +166,14 @@ const Standard = ({ value, max, base }) => {
 const Bar = ({ className, data, max }) => {
   const { row, middle, col3, gutSm } = els;
   const { bar } = style;
-  const { communeName: name, intentded: value, value: real } = data;
+  const { communeName: name, intentded: value, value: real, intent } = data;
   const old = data.old?.intentded;
 
   return (
     <li className={clsx(bar, row, middle, gutSm, className)}>
       <h5 className={col3}>{name}</h5>
       <div className={col3}>
-        <SVGBar {...{ className, value, real, max, old }} />
+        <SVGBar {...{ className, value, real, max, old, std:max, int: intent }} />
       </div>
     </li>
   )

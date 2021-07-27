@@ -36,12 +36,12 @@ export const SVGBar = ({ className, value, real, desc, max, old, std, int }) => 
   let cat = 'undefined';
   if (std) {
     if (int === 'negative') {
-      if (real > std * 2) cat = 'verybad';
-      if (real > std * 1.5) cat = 'bad';
-      if (real > std) cat = 'good';
-      if (real <= std) cat = 'verygood';
+      if (real > std * 1) cat = 'verybad';
+      if (real > std * 0.75) cat = 'bad';
+      if (real > std * 0.5) cat = 'good';
+      if (real <= std * 0.25) cat = 'verygood';
     }
-    if (int === 'positive') {
+    if (int === 'positive' || !int) {
       if (real >= std) cat = 'verygood';
       if (real < std) cat = 'good';
       if (real < std * 0.5) cat = 'bad';
