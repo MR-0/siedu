@@ -11,7 +11,6 @@ import { Compromises } from './Compromises';
 import styles from './City.module.scss';
 
 // TODO:
-// - Seleccionar el primario
 // - Pintar las barrras
 // - Imprimir estandar
 // - Corregir communes resume paso de data a registros sin data
