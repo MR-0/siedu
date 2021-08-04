@@ -4,7 +4,18 @@ import clsx from 'clsx';
 import { styles as els } from 'elementary';
 import styles from './Compromise.module.scss';
 
-export const Compromise = ({ compromise, number, className, ...attrs }) => {
+const bodyOver = ((callback) => {
+  let _callback;
+  document.body.addEventListener('mouseover', () => {
+    _callback && _callback()
+  });
+  document.body.addEventListener('scroll', () => {
+    _callback && _callback()
+  });
+  return (callback) => _callback = callback;
+})();
+
+export const Compromise = ({ compromise, number, className, showTooltip, ...attrs }) => {
   const { holder, title, titleNumber, indicators } = styles
   const { row, col2, col4, middle, gutNo, fit } = els;
   const { name, attributes } = compromise;
@@ -33,7 +44,7 @@ export const Compromise = ({ compromise, number, className, ...attrs }) => {
         </div>
       </div>
       <div className={col4}>
-        <Chart data={normalizedAttributes} className={indicators} {...attrs} />
+        <Chart data={normalizedAttributes} className={indicators} tooltip={ showTooltip } {...attrs} />
       </div>
     </div>
   );
@@ -79,6 +90,9 @@ class Chart extends Component {
 
   drawIndicators(groups, width, height) {
     const gut = 2;
+    const tooltip = this.props.tooltip || (() => {});
+    bodyOver(() => tooltip(null));
+    
     return groups
       .selectAll('rect.indicator')
       .data(d => d.values)
@@ -86,7 +100,8 @@ class Chart extends Component {
       .attr('x', (_, i) => i * width)
       .attr('width', width - gut)
       .attr('height', height)
-      .attr('class', 'indicator');
+      .attr('class', 'indicator')
+      .on('mouseover', tooltip);
   }
 
   getIndicatorClass(d, intent) {
@@ -121,10 +136,11 @@ class Chart extends Component {
       verygood: '#A8C366',
     };
     this.groups.data(data);
-    this.indicators.data(d => d.values.map(d => {
-      const classification = this.getIndicatorClass(d.normalMedian, d.intent);
-      return { ...d, classification };
-    }));
+    this.indicators
+      .data(d => d.values.map(d => {
+        const classification = this.getIndicatorClass(d.normalMedian, d.intent);
+        return { ...d, classification };
+      }));
     this.indicators
       .filter(d => d.normalMedian !== undefined)
       .attr('stroke', 'transparent')
@@ -170,6 +186,7 @@ class Chart extends Component {
       .attr('x', (_, i) => (i + 0.5) * partialWidth - 1)
       .attr('y', height * 0.5)
       .attr('dy', '0.4em')
+      .style('pointer-events', 'none')
       .text('');
     this.updateIndicators();
   }

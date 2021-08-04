@@ -1,10 +1,11 @@
-import React from 'react';
-import { max, groups } from 'd3';
+import React, { Fragment, useState } from 'react';
+import { max, groups, median } from 'd3';
 import { useDataValue } from 'contexts/Data';
 import { Compromise } from './Compromise';
 
 export const Compromises = () => {
   const { compromises, metrics } = useDataValue();
+  const [ tooltip, setTooltip ] = useState(null);
   const fullCompromises = compromises.map(d => {
     const out = {
       ...d,
@@ -20,15 +21,39 @@ export const Compromises = () => {
   });
   const maxIndicators = max(fullCompromises, d => d.indicators.length);
   const maxAttributes = max(fullCompromises, d => d.attributes.length);
-  return fullCompromises.map((compromise, i) => {
-    return <Compromise
-      key={ i }
-      max={ maxIndicators }
-      maxGroups={ maxAttributes }
-      compromise={ compromise }
-      number={ i + 1 }
-      />
-  });
+  const handleShowTooltip = (event, data) => {
+    if (!event) setTooltip(null);
+    else {
+      event.stopPropagation();
+      const { clientX:x, clientY:y } = event;
+      setTooltip({ ...data, x, y });
+    }
+  }
+  return (
+    <Fragment>
+      {fullCompromises.map((compromise, i) => {
+        return <Compromise
+          key={ i }
+          max={ maxIndicators }
+          maxGroups={ maxAttributes }
+          compromise={ compromise }
+          showTooltip={ handleShowTooltip }
+          number={ i + 1 }
+          />
+      })}
+      { tooltip && (
+        <div className="tooltip" style={{
+          left:tooltip.x,
+          top:tooltip.y, 
+        }}>
+          <p>{ tooltip.indicatorId }</p>
+          <p>
+            <b>{ tooltip.values && median(tooltip.values, d => d.value )}</b>
+          </p>
+        </div>
+      ) }
+    </Fragment>
+  )
 }
 
 const addIndicatorsValues = (indicators, metrics) => {
