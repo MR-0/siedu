@@ -49,6 +49,7 @@ const normalizeByGroup = group => {
   const noNullValues = values.filter(d => d.value !== null);
   const valuesDeviation = deviation(noNullValues, d => d.value);
   values.map(d => {
+    d.deviation = valuesDeviation;
     if (d.value !== null) {
       if (valuesDeviation === undefined) d.normal = null;
       else d.normal = valuesDeviation && d.value / valuesDeviation;

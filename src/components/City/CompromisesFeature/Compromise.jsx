@@ -14,6 +14,7 @@ export const Compromise = ({ compromise, number, className, ...attrs }) => {
       d.values = d.values.map(indicator => {
         return {
           ...indicator,
+          realMedian: median(indicator.values, d => d.value),
           normalMedian: median(indicator.values, d => d.normal),
           normalOldMedian: median(indicator.values, d => d.old?.normal)
         }
