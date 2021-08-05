@@ -32,7 +32,6 @@ export const getNormalizeValues = (values) => {
   const noNullValues = values.filter((d) => d.value !== null);
   const minValue = min(noNullValues, (d) => d.value);
   const maxValue = max(noNullValues, (d) => d.value);
-  if (values[0].code === 'BPU_20') console.log(maxValue);
   const diff = maxValue - minValue;
   const intendedValues = values.map((item) => {
     const { value, intent } = item;
@@ -75,6 +74,5 @@ export const getNormalizeValues = (values) => {
       deviation: deviationValue,
     };
   });
-  if (values[0].code === 'BPU_20') console.log(fullValues);
   return fullValues;
 };

@@ -68,7 +68,6 @@ const Indicator = ({ data, commune }) => {
     ? standard.value * intentded / value
     : 0
   );
-  console.log(value, max, intent);
   return (
     <div className={ clsx(style.indicator, els.col2) }>
       <div className={ style.bars }>

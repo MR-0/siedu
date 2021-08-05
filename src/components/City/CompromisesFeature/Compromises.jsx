@@ -26,8 +26,6 @@ export const Compromises = () => {
       setTooltip({ ...data, x, y });
     }
   }
-
-  console.log(fullCompromises);
   
   return (
     <Fragment>
