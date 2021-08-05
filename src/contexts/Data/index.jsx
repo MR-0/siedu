@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { groups, mean, median, deviation, max, min } from 'd3';
 import { useTsvIndicators } from './tsvIndicatorsHook';
-import { useSieduArcgisApi } from './arcgisHhook';
 import { useContents } from './contentsHook';
 import { useConfigValue } from 'contexts/Config';
+import { getNormalizeValues } from './utils';
 
 const nameGroups = (data, fun, trans) => groups(data, fun).map(d => {
   const [ name, values ] = d;
@@ -30,7 +30,7 @@ const getGroup = group => {
   };
 };
 
-const getFeature = (data, key, cityObj, transform) => {
+const groupFeature = (data, key, cityObj, transform) => {
   transform = transform || (d => d);
   const city = cityObj?.code;
   const values = nameGroups(data, d => d[key], transform);
@@ -43,33 +43,6 @@ const getFeature = (data, key, cityObj, transform) => {
     getAll: getGroup(values), 
   };
 };
-
-const normalizeByGroup = group => {
-  const { values } = group;
-  const noNullValues = values.filter(d => d.value !== null);
-  const valuesDeviation = deviation(noNullValues, d => d.value);
-  values.map(d => {
-    d.deviation = valuesDeviation;
-    if (d.value !== null) {
-      if (valuesDeviation === undefined) d.normal = null;
-      else d.normal = valuesDeviation && d.value / valuesDeviation;
-    }
-    else {
-      d.normal = null;
-    }
-  });
-  const valuesMax = max(values, d => d.normal);
-  values.map(d => {
-    const intended = valuesMax
-      ? valuesMax - d.normal
-      : d.normal;
-    d.intentded = d.intent === 'negative'
-      ? intended
-      : d.normal;
-    d.standard.intent = d.intent;
-  });
-  return group;
-}
 
 const useIndicatorsWithIntent = year => {
   const { contents } = useContents(year);
@@ -87,11 +60,16 @@ export const DataProvider = ({ children }) => {
   const indicators = useIndicatorsWithIntent(year);
   const oldIndicators = useIndicatorsWithIntent(year - 1);
   
-  // const { features: otherFeatures } = useSieduArcgisApi(year);
-  const regions = getFeature(indicators, 'region', city);
-  const metrics = getFeature(indicators, 'code', city, normalizeByGroup);
-  const oldMetrics = getFeature(oldIndicators, 'code', city, normalizeByGroup);
-  const communes = getFeature(indicators, 'commune', city, group => {
+  const regions = groupFeature(indicators, 'region', city);
+  const metrics = groupFeature(indicators, 'code', city, (group) => {
+    const values = getNormalizeValues(group.values);
+    return { ...group, values };
+  });
+  const oldMetrics = groupFeature(oldIndicators, 'code', city, (group) => {
+    const values = getNormalizeValues(group.values);
+    return { ...group, values };
+  });
+  const communes = groupFeature(indicators, 'commune', city, group => {
     const { name: code, values } = group;
     const { name } = communesValues?.find(d => d.cut === code) || {};
     return { code, name, values };
@@ -116,27 +94,3 @@ export const DataProvider = ({ children }) => {
 };
 
 export const useDataValue = () => useContext(DataContext);
-
-const capitalize = (str) => {
-  return str.split(' ').map(d => {
-    return ''
-      + d.slice(0,1).toUpperCase()
-      + d.slice(1).toLowerCase()
-  }).join(' ')
-};
-
-const logAllCommunes = (uglyFeatures, communes) => {
-  const featureCommunes = groups(uglyFeatures, d => d.COMUNA);
-  const fullCommunes = communes.map(d => {
-    const feature = featureCommunes.find(fd => fd[0] === d.cut);
-    const city = feature ? feature[1][0].CIUDAD : '';
-    const cityName = feature ? capitalize(feature[1][0].NOM_CIUDAD) : '';
-    return [d.cut, d.name, d.region, city, cityName];
-  });
-
-  console.log(fullCommunes);
-  window.fullCommunes = [
-    ['cut','name','region','city','cityName'],
-    ...fullCommunes
-  ].map(d => d.join('\t')).join('\n');
-};
