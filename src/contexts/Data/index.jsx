@@ -1,34 +1,9 @@
 import React, { createContext, useContext } from 'react';
-import { groups, mean, median, deviation, max, min } from 'd3';
+import { mean, median, deviation, max, min } from 'd3';
 import { useTsvIndicators } from './tsvIndicatorsHook';
 import { useContents } from './contentsHook';
 import { useConfigValue } from 'contexts/Config';
-import { getNormalizeValues } from './utils';
-
-const nameGroups = (data, fun, trans) => groups(data, fun).map(d => {
-  const [ name, values ] = d;
-  return trans({ name, values });
-});
-
-const getGroup = group => {
-  return name => {
-    const values = group.find(d => d.name === name)?.values || [];
-    const noNullValues = values.filter(d => d.normal !== null);
-    const valuesMin = min(noNullValues, d => d.normal);
-    const valuesMax = max(noNullValues, d => d.normal);
-    const valuesMean = mean(noNullValues, d => d.normal);
-    const valuesMedian = median(noNullValues, d => d.normal);
-    const valuesDeviation = deviation(noNullValues, d => d.normal)
-    return {
-      values,
-      min: valuesMin || null,
-      max: valuesMax || null,
-      mean: valuesMean || null,
-      median: valuesMedian || null,
-      deviation: valuesDeviation || null
-    };
-  };
-};
+import { nameGroups, getNormalizeValues } from './utils';
 
 const groupFeature = (data, key, cityObj, transform) => {
   transform = transform || (d => d);
@@ -36,11 +11,28 @@ const groupFeature = (data, key, cityObj, transform) => {
   const values = nameGroups(data, d => d[key], transform);
   const localData = data.filter(d => d.city === city);
   const localValues = nameGroups(localData, d => d[key], transform);
+  const allGroups = [ ...values, ...localValues ];
+  
+  allGroups.map((group) => {
+    const { values } = group;
+    const noNullValues = values.filter(d => d.normal !== null);
+    const minValue = min(noNullValues, d => d.normal);
+    const maxValue = max(noNullValues, d => d.normal);
+    const meanValue = mean(noNullValues, d => d.normal);
+    const medianValue = median(noNullValues, d => d.normal);
+    const deviationValue = deviation(noNullValues, d => d.normal)
+    group.min = minValue || null;
+    group.max = maxValue || null;
+    group.mean = meanValue || null;
+    group.median = medianValue || null;
+    group.deviation = deviationValue || null;
+  });
+  
   return {
     values,
     localValues,
-    get: getGroup(localValues),
-    getAll: getGroup(values), 
+    get: name => localValues.find(d => d.name === name),
+    getAll: name => values.find(d => d.name === name), 
   };
 };
 
