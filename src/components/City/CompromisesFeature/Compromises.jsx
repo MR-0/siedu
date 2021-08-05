@@ -1,23 +1,20 @@
 import React, { Fragment, useState } from 'react';
-import { max, groups, median } from 'd3';
+import { max, median } from 'd3';
+import { nameGroups } from '../../../contexts/Data/utils'
 import { useDataValue } from 'contexts/Data';
 import { Compromise } from './Compromise';
 
 export const Compromises = () => {
   const { compromises, metrics } = useDataValue();
   const [ tooltip, setTooltip ] = useState(null);
-  const fullCompromises = compromises.map(d => {
-    const out = {
-      ...d,
-      indicators: addIndicatorsValues(d.indicators, metrics)
-    };
-
-    out.attributes = groups(out.indicators, d => d.attribute).map(d => {
-      const [ name, values ] = d;
-      return { name, values };
+  const fullCompromises = compromises.map(compromise => {
+    const indicators = compromise.indicators.map(indicator => {
+      const { indicatorId: id } = indicator;
+      const { values, median, deviation } = metrics.get(id);
+      return { ...indicator, values, median, deviation };      
     });
-
-    return out;
+    const attributes = nameGroups(indicators, d => d.attribute);
+    return { ...compromise, indicators, attributes };
   });
   const maxIndicators = max(fullCompromises, d => d.indicators.length);
   const maxAttributes = max(fullCompromises, d => d.attributes.length);
@@ -29,6 +26,9 @@ export const Compromises = () => {
       setTooltip({ ...data, x, y });
     }
   }
+
+  console.log(fullCompromises);
+  
   return (
     <Fragment>
       {fullCompromises.map((compromise, i) => {
@@ -55,10 +55,3 @@ export const Compromises = () => {
     </Fragment>
   )
 }
-
-const addIndicatorsValues = (indicators, metrics) => {
-  return indicators.map(d => {
-    const { values, median, deviation } = metrics.get(d.indicatorId);
-    return { ...d, values, median, deviation };
-  });
-};

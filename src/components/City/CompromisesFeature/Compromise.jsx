@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { styles as els } from 'elementary';
 import styles from './Compromise.module.scss';
 
-const bodyOver = ((callback) => {
+const bodyOver = (() => {
   let _callback;
   document.body.addEventListener('mouseover', () => {
     _callback && _callback()
