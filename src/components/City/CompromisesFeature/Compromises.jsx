@@ -25,7 +25,9 @@ export const Compromises = () => {
       const { clientX:x, clientY:y } = event;
       setTooltip({ ...data, x, y });
     }
-  }
+  };
+
+  console.log(fullCompromises, maxIndicators, maxAttributes);
   
   return (
     <Fragment>

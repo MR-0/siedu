@@ -24,44 +24,42 @@ const useIndicators = year => {
 };
 
 const createFilterGroup = (groups, city) => {
+  const localValues = groups.map((group) => {
+    const values = group.values.filter(d => d.city === city?.code);
+    return { ...group, values }
+  })
   return {
     values: groups,
+    localValues,
     get: (name) => {
-      const group = groups.find((d) => d.name === name);
-      const values = (group?.values || []).filter(d => d.city === city?.code);
+      const group = groups.find((d) => d.name === name) || {};
+      const values = (group.values || []).filter(d => d.city === city?.code);
       return group && { ...group, values };
     },
-    getAll: (name) => groups.find((d) => d.name === name),
+    getAll: (name) => groups.find((d) => d.name === name) || { values: [] },
   }
 }
 
 export const DataContext = createContext();
 export const DataProvider = ({ children }) => {
-  const [ features, setFeatures ] = useState({});
   const { year, city, communes:communesValues } = useConfigValue();
   const { compromises } = useContents(year);
   const indicators = useIndicators(year);
-
-  Object.entries(features).map(([key, feature]) => {
-    return features[key] = createFilterGroup(feature, city);
+  const regions = groupFeature(indicators, 'region');
+  const metrics = groupFeature(indicators, 'code', (group) => {
+    const values = getNormalizeValues(group.values);
+    return { ...group, values };
   });
-
-  useEffect(() => {
-    const regions = groupFeature(indicators, 'region');
-    const metrics = groupFeature(indicators, 'code', (group) => {
-      const values = getNormalizeValues(group.values);
-      return { ...group, values };
-    });
-    const communes = groupFeature(indicators, 'commune', group => {
-      const { name: code, values } = group;
-      const { name } = communesValues?.find(d => d.cut === code) || {};
-      return { code, name, values };
-    });
-
-    setFeatures({ regions, metrics, communes });
-  }, [year]);
-
-  console.log(features);
+  const communes = groupFeature(indicators, 'commune', (group) => {
+    const { name: code, values } = group;
+    const { name } = communesValues?.find(d => d.cut === code) || {};
+    return { code, name, values };
+  });
+  const features = {
+    regions: createFilterGroup(regions, city),
+    metrics: createFilterGroup(metrics, city),
+    communes: createFilterGroup(communes, city),
+  };
 
   return (
     <DataContext.Provider value={{ indicators, compromises, ...features }}>
