@@ -157,15 +157,24 @@ const addPosition = (data, gut, width) => {
 }
 
 const getClassification = (indicator) => {
-  const { dif, median, deviation, standard } = indicator;
+  const { dif, median, deviation, standard, intent } = indicator;
+  const isNegative = intent === 'negative';
   const std = standard.value;
   let cls;
 
   if (std !== null) {
-    if (median < std - deviation) cls = 'high';
-    if (median >= std - deviation) cls = 'medium';
-    if (median >= std - deviation * 0.5) cls = 'low';
-    if (median >= std) cls = 'zero';
+    if (isNegative) {
+      if (median <= std - deviation) cls = 'zero';
+      if (median > std - deviation) cls = 'low';
+      if (median > std - deviation * 0.5) cls = 'medium';
+      if (median > std) cls = 'high';
+    }
+    else {
+      if (median < std - deviation) cls = 'high';
+      if (median >= std - deviation) cls = 'medium';
+      if (median >= std - deviation * 0.5) cls = 'low';
+      if (median >= std) cls = 'zero';
+    }
   }
   else {
     if (median < dif * 0.25) cls = 'high';

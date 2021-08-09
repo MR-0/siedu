@@ -15,7 +15,6 @@ export const Compromises = () => {
     const attributes = nameGroups(indicators, d => d.attribute);
     return { ...compromise, indicators, attributes };
   });
-  console.log(fullCompromises);
   const maxIndicators = max(fullCompromises, d => d.indicators.length);
   const maxAttributes = max(fullCompromises, d => d.attributes.length);
   const handleShowTooltip = (event, data) => {
