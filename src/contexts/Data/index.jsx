@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useTsvIndicators } from './tsvIndicatorsHook';
 import { useContents } from './contentsHook';
 import { useConfigValue } from 'contexts/Config';
-import { groupFeature, getNormalizeValues } from './utils';
+import { nameGroups, groupFeature, normalize } from './utils';
 
 const useIndicators = year => {
   const { contents } = useContents(year);
@@ -24,10 +24,12 @@ const useIndicators = year => {
 };
 
 const createFilterGroup = (groups, city) => {
-  const localValues = groups.map((group) => {
-    const values = group.values.filter(d => d.city === city?.code);
-    return { ...group, values }
-  })
+  const localValues = groups
+    .map((group) => {
+      const values = group.values.filter(d => d.city === city?.code);
+      return { ...group, values }
+    })
+    .filter((group) => group.values.length)
   return {
     values: groups,
     localValues,
@@ -45,12 +47,15 @@ export const DataProvider = ({ children }) => {
   const { year, city, communes:communesValues } = useConfigValue();
   const { compromises } = useContents(year);
   const indicators = useIndicators(year);
-  const regions = groupFeature(indicators, 'region');
-  const metrics = groupFeature(indicators, 'code', (group) => {
-    const values = getNormalizeValues(group.values);
-    return { ...group, values };
-  });
-  const communes = groupFeature(indicators, 'commune', (group) => {
+  const normalizedIndicators = nameGroups(
+    indicators,
+    (d) => d.code,
+    ({ values }) => normalize(values)
+  ).reduce((a, b) => a.concat(b), []);
+
+  const regions = groupFeature(normalizedIndicators, 'region');
+  const metrics = groupFeature(normalizedIndicators, 'code');
+  const communes = groupFeature(normalizedIndicators, 'commune', (group) => {
     const { name: code, values } = group;
     const { name } = communesValues?.find(d => d.cut === code) || {};
     return { code, name, values };

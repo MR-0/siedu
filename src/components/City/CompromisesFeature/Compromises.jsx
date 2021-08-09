@@ -10,8 +10,7 @@ export const Compromises = () => {
   const fullCompromises = compromises.map(compromise => {
     const indicators = compromise.indicators.map(indicator => {
       const { indicatorId: id } = indicator;
-      const { values, median, deviation } = metrics.get(id);
-      return { ...indicator, values, median, deviation };      
+      return { ...indicator, ...metrics.get(id) };
     });
     const attributes = nameGroups(indicators, d => d.attribute);
     return { ...compromise, indicators, attributes };
@@ -26,8 +25,6 @@ export const Compromises = () => {
       setTooltip({ ...data, x, y });
     }
   };
-
-  console.log(fullCompromises, maxIndicators, maxAttributes);
   
   return (
     <Fragment>

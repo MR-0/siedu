@@ -2,155 +2,123 @@ import React, { Component, createRef } from 'react';
 import { select } from 'd3';
 import styles from './Compromise.module.scss';
 
-const bodyOver = (() => {
-  let _callback;
-  document.body.addEventListener('mouseover', () => {
-    _callback && _callback()
-  });
-  document.body.addEventListener('scroll', () => {
-    _callback && _callback()
-  });
-  return (callback) => _callback = callback;
-})();
-
 export class Chart extends Component {
   holder = createRef();
 
-  draw(element) {
-    const rect = element.getBoundingClientRect().toJSON();
-    const width = Math.round(rect.width);
-    const height = Math.round(rect.height);
-    const svg = select(element)
-      .append('svg')
-      .attr("viewBox", [0, 0, width, height])
-      .attr('width', width)
-      .attr('height', height);
-    return [svg, width, height];
-  }
-
-  addDataPosition(data, gut, width) {
-    let prev = null;
-    return data.map(d => {
-      const out = { ...d };
-      out.pos = prev
-        ? prev.pos + prev.values.length * width + gut
-        : 0;
-      prev = out;
-      return out;
+  getData () {
+    const { data:dataBase } = this.props;
+    const width = this.getWidth();
+    const dataPos = addPosition(dataBase, this.gut, width);
+    const dataNorm = dataPos.map(group => {
+      const values = group.values.map(indicator => {
+        const { values } = indicator;
+        const { old } = values[0];
+        const classification = getClassification(indicator);
+        const oldClassification = getClassification({
+          dif: old.normalMax - old.normalMin,
+          median: old.normalMedian,
+          deviation: old.normalDeviation,
+          standard: old.standard
+        });
+        return { ...indicator, classification, oldClassification };
+      });
+      return { ...group, values };
     });
+    return dataNorm;
   }
 
-  drawGroups(svg, gut, width) {
-    const { data } = this.props;
-    const dataPos = this.addDataPosition(data, gut, width);
-    return svg
+  getWidth () {
+    const { maxGroups, max } = this.props;
+    return (this.width - maxGroups * this.gut) / max;
+  }
+
+  drawGroups(data) {
+    return this.svg
       .selectAll('g.attribute')
-      .data(dataPos)
+      .data(data)
       .join('g')
       .attr('class', 'attribute')
       .attr('transform', d => `translate(${d.pos}, 0)`);
   }
 
-  drawIndicators(groups, width, height) {
+  drawIndicators() {
     const gut = 2;
     const tooltip = this.props.tooltip || (() => {});
+    const width = this.getWidth();
+    
     bodyOver(() => tooltip(null));
     
-    return groups
+    return this.groups
       .selectAll('rect.indicator')
       .data(d => d.values)
       .join('rect')
       .attr('x', (_, i) => i * width)
       .attr('width', width - gut)
-      .attr('height', height)
+      .attr('height', this.height)
       .attr('class', 'indicator')
       .on('mouseover', tooltip);
   }
 
-  getIndicatorClass(d, intent) {
-    let classification;
-    if (intent === 'positive') {
-      if (d >= 0) classification = 'verybad';
-      if (d > 0.5) classification = 'bad';
-      if (d > 1) classification = 'good';
-      if (d > 2) classification = 'verygood';
-    }
-    if (intent === 'negative') {
-      if (d >= 0) classification = 'verygood';
-      if (d > 0.5) classification = 'good';
-      if (d > 1) classification = 'bad';
-      if (d > 2) classification = 'verybad';
-    }
-    if (intent === 'boolean') {
-      if (d < 0.5) classification = 'verybad';
-      if (d >= 0.5) classification = 'verygood';
-    }
-
-    return classification;
+  drawEvolution() {
+    const width = this.getWidth();
+    return this.groups
+      .selectAll('text')
+      .data(d => d.values)
+      .join('text')
+      .attr('x', (_, i) => (i + 0.5) * width - 1)
+      .attr('y', this.height * 0.5)
+      .attr('dy', '0.4em')
+      .style('pointer-events', 'none')
+      .text('');
   }
 
   updateIndicators() {
-    const { data } = this.props;
+    const data = this.getData();
     const { icon } = styles
     const fills = {
-      verybad: '#EF6350', // <-- bad
-      bad: '#F5A196',
-      good: '#FCDAD5',
-      verygood: '#A8C366',
+      high: '#EF6350', // <-- bad
+      medium: '#F5A196',
+      low: '#FCDAD5',
+      zero: '#A8C366',
     };
+    const fillsKeys = Object.keys(fills);
     this.groups.data(data);
+    this.indicators.data(d => d.values);
     this.indicators
-      .data(d => d.values.map(d => {
-        const classification = this.getIndicatorClass(d.normalMedian, d.intent);
-        return { ...d, classification };
-      }));
-    this.indicators
-      .filter(d => d.normalMedian !== undefined)
+      .filter(d => d.values.length)
       .attr('stroke', 'transparent')
       .attr('fill', d => fills[d.classification]);
     this.indicators
-      .filter(d => d.normalMedian === undefined)
+      .filter(d => !d.values.length)
       .attr('fill', 'transparent')
       .attr('stroke', '#aaa');
     this.evolution
-      .data(d => d.values.map(d => {
-        const classification = this.getIndicatorClass(d.normalMedian, d.intent);
-        return { ...d, classification };
-      }))
-      .filter(d => d.normalMedian !== undefined)
+      .data(d => d.values)
       .attr('class', 'evolution-icon ' + icon)
       .attr('fill', '#fff')
       .text(d => {
-        const keys = Object.keys(fills);
-        const currentInd = keys.indexOf(d.classification);
-        const oldClassification = this.getIndicatorClass(d.normalOldMedian, d.intent);
-        const oldInd = keys.indexOf(oldClassification);
+        const current = fillsKeys.indexOf(d.classification);
+        const old = fillsKeys.indexOf(d.oldClassification);
 
-        if (d.normalOldMedian !== null && d.normalOldMedian !== undefined) {
-          if (currentInd > oldInd) return 'a';
-          if (currentInd < oldInd) return 'b';
-          if (currentInd === oldInd) return 'c';
-        }
+        if (current > old) return 'a';
+        if (current < old) return 'b';
+        if (current === old) return 'c';
         return '';
       })
   }
 
   componentDidMount() {
-    const { max, maxGroups } = this.props;
-    const [svg, width, height] = this.draw(this.holder.current);
-    const gut = 10;
-    const partialWidth = (width - maxGroups * gut) / max;
-    this.groups = this.drawGroups(svg, gut, partialWidth);
-    this.indicators = this.drawIndicators(this.groups, partialWidth, height);
-    this.evolution = this.groups
-      .selectAll('text')
-      .data(d => d.values)
-      .join('text')
-      .attr('x', (_, i) => (i + 0.5) * partialWidth - 1)
-      .attr('y', height * 0.5)
-      .attr('dy', '0.4em')
-      .style('pointer-events', 'none')
-      .text('');
+    this.svg = createSVG(this.holder.current);
+    this.width = this.svg.attr('width');
+    this.height = this.svg.attr('height');
+    this.gut = 10;
+    
+    const data = this.getData();
+    
+    this.groups = this.drawGroups(data);
+    this.indicators = this.drawIndicators();
+    this.evolution = this.drawEvolution();
+
     this.updateIndicators();
   }
 
@@ -163,3 +131,59 @@ export class Chart extends Component {
     return <div className={className} ref={this.holder}></div>;
   }
 }
+
+const createSVG = (parent) => {
+  const rect = parent.getBoundingClientRect().toJSON();
+  const width = Math.round(rect.width);
+  const height = Math.round(rect.height);
+  const svg = select(parent)
+    .append('svg')
+    .attr("viewBox", [0, 0, width, height])
+    .attr('width', width)
+    .attr('height', height);
+  return svg;
+}
+
+const addPosition = (data, gut, width) => {
+  let prev = null;
+  return data.map(d => {
+    const out = { ...d };
+    out.pos = prev
+      ? prev.pos + prev.values.length * width + gut
+      : 0;
+    prev = out;
+    return out;
+  });
+}
+
+const getClassification = (indicator) => {
+  const { dif, median, deviation, standard } = indicator;
+  const std = standard.value;
+  let cls;
+
+  if (std !== null) {
+    if (median < std - deviation) cls = 'high';
+    if (median >= std - deviation) cls = 'medium';
+    if (median >= std - deviation * 0.5) cls = 'low';
+    if (median >= std) cls = 'zero';
+  }
+  else {
+    if (median < dif * 0.25) cls = 'high';
+    if (median >= dif * 0.25) cls = 'medium';
+    if (median >= dif * 0.5) cls = 'low';
+    if (median >= dif * 0.75) cls = 'zero';
+  }
+
+  return cls;
+}
+
+const bodyOver = (() => {
+  let _callback;
+  document.body.addEventListener('mouseover', () => {
+    _callback && _callback()
+  });
+  document.body.addEventListener('scroll', () => {
+    _callback && _callback()
+  });
+  return (callback) => _callback = callback;
+})();

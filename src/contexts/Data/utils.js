@@ -18,61 +18,91 @@ export const groupFeature = (data, key, transform) => {
     const deviationValue = deviation(noNullValues, (d) => d.normal);
     return {
       ...group,
-      min: minValue || null,
-      max: maxValue || null,
-      median: medianValue || null,
-      deviation: deviationValue || null,
+      min: minValue,
+      max: maxValue,
+      dif: maxValue - minValue,
+      median: medianValue,
+      deviation: deviationValue,
+      standard: values[0].standard,
     };
   });
 
   return groups;
 };
 
-export const getNormalizeValues = (values) => {
+export const normalize = (values) => {
+  const oldValues = values.map((d) => d.old || {});
+  const fullOldValues = getFullValues(oldValues);
+  const fullValues = getFullValues(values).map((item, i) => {
+    const old = fullOldValues[i];
+    return { ...item, old };
+  });
+
+  return fullValues;
+};
+
+const getFullValues = (values) => {
   const noNullValues = values.filter((d) => d.value !== null);
   const minValue = min(noNullValues, (d) => d.value);
   const maxValue = max(noNullValues, (d) => d.value);
-  const diff = maxValue - minValue;
+  const medianValue = median(values, (d) => d.value);
+  const deviationValue = deviation(values, (d) => d.value);
+  const difValue = maxValue - minValue;
   const intendedValues = values.map((item) => {
     const { value, intent } = item;
     const isNegative = intent === 'negative';
-    const isNumber = typeof value === 'number';
-    const intended = isNegative
-      ? isNumber
-        ? maxValue - value
-        : null
-      : isNumber
-      ? value - minValue
-      : null;
+    const isNumber = typeof value === 'number' && !isNaN(value);
+    let intended = null;
+    if (isNumber) {
+      if (isNegative) intended = maxValue - value;
+      else intended = value;
+    }
     return { ...item, intended };
   });
-  const normalizedValues = intendedValues.map((item) => {
-    const { intended } = item;
+  const normalizedValues = intendedValues.map((item, i) => {
+    const { intent, intended } = item;
+    const isNegative = intent === 'negative';
+    const value = isNegative ? intended : intended - minValue;
     const isNumber = typeof intended === 'number';
-    const normal = isNumber ? (diff ? (intended * 100) / diff : diff) : null;
+    const normal = isNumber
+      ? difValue
+        ? (value * 100) / difValue
+        : difValue
+      : null;
     return { ...item, normal };
   });
-  const medianValue = median(normalizedValues, (d) => d.normal);
-  const deviationValue = deviation(normalizedValues, (d) => d.normal);
+  const normalMinValue = min(normalizedValues, (d) => d.normal);
+  const normalMaxValue = max(normalizedValues, (d) => d.normal);
+  const normalMedianValue = median(normalizedValues, (d) => d.normal);
+  const normalDeviationValue = deviation(normalizedValues, (d) => d.normal);
   const classificateddValues = normalizedValues.map((item) => {
     const std = item.standard?.value;
     let cls = '';
     if (std) {
-      if (item.normal < std - deviationValue) cls = 'high';
-      if (item.normal >= std - deviationValue) cls = 'medium';
-      if (item.normal >= std - deviationValue * 0.5) cls = 'low';
+      if (item.normal < std - normalDeviationValue) cls = 'high';
+      if (item.normal >= std - normalDeviationValue) cls = 'medium';
+      if (item.normal >= std - normalDeviationValue * 0.5) cls = 'low';
       if (item.normal >= std) cls = 'zero';
+    } else {
+      if (item.normal < difValue * 0.25) cls = 'high';
+      if (item.normal >= difValue * 0.25) cls = 'medium';
+      if (item.normal >= difValue * 0.5) cls = 'low';
+      if (item.normal >= difValue * 0.75) cls = 'zero';
     }
     return { ...item, classification: cls };
   });
-  const fullValues = classificateddValues.map((item) => {
+
+  return classificateddValues.map((item) => {
     return {
       ...item,
       min: minValue,
       max: maxValue,
       median: medianValue,
       deviation: deviationValue,
+      normalMin: normalMinValue,
+      normalMax: normalMaxValue,
+      normalMedian: normalMedianValue,
+      normalDeviation: normalDeviationValue,
     };
   });
-  return fullValues;
 };
