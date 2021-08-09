@@ -67,7 +67,11 @@ export const DataProvider = ({ children }) => {
   };
 
   return (
-    <DataContext.Provider value={{ indicators, compromises, ...features }}>
+    <DataContext.Provider value={{
+      indicators: normalizedIndicators,
+      compromises,
+      ...features
+    }}>
       { children }
     </DataContext.Provider>
   );
