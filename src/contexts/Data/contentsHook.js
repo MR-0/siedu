@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { tsv, groups } from 'd3';
 
-import indicatorsFile from 'data/indicators.tsv';
+import indicatorsMetaPath from 'data/indicators-meta.tsv';
 import compromisesFile from 'data/compromises.tsv';
 
 export const useContents = (year) => {
@@ -21,10 +21,12 @@ export const useContents = (year) => {
   });
 
   useEffect(() => {
-    Promise.all([tsv(indicatorsFile), tsv(compromisesFile)]).then((results) => {
-      setCompromisesContent(results[1]);
-      setIndicators(results[0]);
-    });
+    Promise.all([tsv(indicatorsMetaPath), tsv(compromisesFile)]).then(
+      (results) => {
+        setCompromisesContent(results[1]);
+        setIndicators(results[0]);
+      }
+    );
   }, []);
 
   return { contents, compromises };

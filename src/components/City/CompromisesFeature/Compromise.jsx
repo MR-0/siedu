@@ -1,5 +1,4 @@
 import React from 'react';
-import { median } from 'd3';
 import clsx from 'clsx';
 import { Chart } from './Chart';
 import { styles as els } from 'elementary';
@@ -9,19 +8,6 @@ export const Compromise = ({ compromise, number, className, showTooltip, ...attr
   const { holder, title, titleNumber, indicators } = styles
   const { row, col2, col4, middle, gutNo, fit } = els;
   const { name, attributes } = compromise;
-  const normalizedAttributes = attributes
-    .map(d => ({ ...d }))
-    .map(d => {
-      d.values = d.values.map(indicator => {
-        return {
-          ...indicator,
-          realMedian: median(indicator.values, d => d.value),
-          normalMedian: median(indicator.values, d => d.normal),
-          normalOldMedian: median(indicator.values, d => d.old?.normal)
-        }
-      });
-      return d;
-    });
 
   return (
     <div className={clsx(row, middle, holder, className)}>
@@ -34,7 +20,12 @@ export const Compromise = ({ compromise, number, className, showTooltip, ...attr
         </div>
       </div>
       <div className={col4}>
-        <Chart data={attributes} className={indicators} tooltip={ showTooltip } {...attrs} />
+        <Chart
+          data={attributes}
+          className={indicators}
+          tooltip={ showTooltip }
+          {...attrs}
+        />
       </div>
     </div>
   );

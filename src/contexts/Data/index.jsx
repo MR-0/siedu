@@ -8,12 +8,14 @@ const useIndicators = year => {
   const { contents } = useContents(year);
   const { indicators } = useTsvIndicators(year);
   const { indicators:oldIndicators } = useTsvIndicators(year - 1);
+  
   const oldIndicatorsKeys = oldIndicators.reduce((out, indicator) => {
     const { code, commune } = indicator;
     const key = `${ code }_${ commune }`;
     out[key] = indicator;
     return out;
   }, {});
+  
   return indicators.map(indicator => {
     const { code, commune } = indicator;
     const key = `${ code }_${ commune }`;
@@ -34,11 +36,11 @@ const createFilterGroup = (groups, city) => {
     values: groups,
     localValues,
     get: (name) => {
-      const group = groups.find((d) => d.name === name) || {};
+      const group = groups.find((d) => d.name === name);
       const values = (group.values || []).filter(d => d.city === city?.code);
       return group && { ...group, values };
     },
-    getAll: (name) => groups.find((d) => d.name === name) || { values: [] },
+    getAll: (name) => groups.find((d) => d.name === name),
   }
 }
 

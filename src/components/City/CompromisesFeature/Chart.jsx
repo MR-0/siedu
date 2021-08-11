@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { select } from 'd3';
+import { median, select } from 'd3';
 import styles from './Compromise.module.scss';
 
 export class Chart extends Component {
@@ -11,15 +11,8 @@ export class Chart extends Component {
     const dataPos = addPosition(dataBase, this.gut, width);
     const dataNorm = dataPos.map(group => {
       const values = group.values.map(indicator => {
-        const { values } = indicator;
-        const { old } = values[0];
         const classification = getClassification(indicator);
-        const oldClassification = getClassification({
-          dif: old.normalMax - old.normalMin,
-          median: old.normalMedian,
-          deviation: old.normalDeviation,
-          standard: old.standard
-        });
+        const oldClassification = getClassification(indicator.old);
         return { ...indicator, classification, oldClassification };
       });
       return { ...group, values };
@@ -100,6 +93,7 @@ export class Chart extends Component {
         const current = fillsKeys.indexOf(d.classification);
         const old = fillsKeys.indexOf(d.oldClassification);
 
+        if (old === -1) return '';
         if (current > old) return 'a';
         if (current < old) return 'b';
         if (current === old) return 'c';
@@ -157,33 +151,23 @@ const addPosition = (data, gut, width) => {
 }
 
 const getClassification = (indicator) => {
-  const { dif, median, deviation, standard, intent } = indicator;
-  const isNegative = intent === 'negative';
+  const { values, normalDeviation, standard } = indicator;
   const std = standard.value;
-  let cls;
+  console.log(indicator);
+  const medianValue = median(values, d => d.normal);
 
   if (std !== null) {
-    if (isNegative) {
-      if (median <= std - deviation) cls = 'zero';
-      if (median > std - deviation) cls = 'low';
-      if (median > std - deviation * 0.5) cls = 'medium';
-      if (median > std) cls = 'high';
-    }
-    else {
-      if (median < std - deviation) cls = 'high';
-      if (median >= std - deviation) cls = 'medium';
-      if (median >= std - deviation * 0.5) cls = 'low';
-      if (median >= std) cls = 'zero';
-    }
+    if (medianValue >= std) return 'zero';
+    if (medianValue >= std - normalDeviation * 0.5) return 'low';
+    if (medianValue >= std - normalDeviation) return 'medium';
+    if (medianValue < std - normalDeviation) return 'high';
   }
   else {
-    if (median < dif * 0.25) cls = 'high';
-    if (median >= dif * 0.25) cls = 'medium';
-    if (median >= dif * 0.5) cls = 'low';
-    if (median >= dif * 0.75) cls = 'zero';
+    if (medianValue >= 75) return 'zero';
+    if (medianValue >= 50) return 'low';
+    if (medianValue >= 25) return 'medium';
+    if (medianValue <  25) return 'high';
   }
-
-  return cls;
 }
 
 const bodyOver = (() => {

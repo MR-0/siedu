@@ -9,22 +9,36 @@ export const nameGroups = (data, fun, trans) =>
 
 export const groupFeature = (data, key, transform) => {
   const incompleteGroups = nameGroups(data, (d) => d[key], transform);
+  // TODO: Esto no sirve para nada
   const groups = incompleteGroups.map((group) => {
     const { values } = group;
-    const noNullValues = values.filter((d) => d.normal !== null);
-    const minValue = min(noNullValues, (d) => d.normal);
-    const maxValue = max(noNullValues, (d) => d.normal);
-    const medianValue = median(noNullValues, (d) => d.normal);
-    const deviationValue = deviation(noNullValues, (d) => d.normal);
+    const props = getGroupProps(values[0]);
+    const oldProps = getGroupProps(values[0].old);
+    const oldValues = values.map((d) => d.old);
+
     return {
       ...group,
-      min: minValue,
-      max: maxValue,
-      dif: maxValue - minValue,
-      median: medianValue,
-      deviation: deviationValue,
-      standard: values[0].standard,
+      ...props,
+      old: {
+        ...oldProps,
+        values: oldValues,
+      },
     };
+
+    // const noNullValues = values.filter((d) => d.normal !== null);
+    // const minValue = min(noNullValues, (d) => d.normal);
+    // const maxValue = max(noNullValues, (d) => d.normal);
+    // const medianValue = median(noNullValues, (d) => d.normal);
+    // const deviationValue = deviation(noNullValues, (d) => d.normal);
+    // return {
+    //   ...group,
+    //   min: minValue,
+    //   max: maxValue,
+    //   dif: maxValue - minValue,
+    //   median: medianValue,
+    //   deviation: deviationValue,
+    //   standard: values[0].standard,
+    // };
   });
 
   return groups;
@@ -46,8 +60,9 @@ const getFullValues = (values) => {
   const minValue = min(noNullValues, (d) => d.value);
   const maxValue = max(noNullValues, (d) => d.value);
   const medianValue = median(values, (d) => d.value);
-  const deviationValue = deviation(values, (d) => d.value);
+  const deviationValue = deviation(noNullValues, (d) => d.value);
   const difValue = maxValue - minValue;
+
   const intendedValues = values.map((item) => {
     const { value, intent } = item;
     const isNegative = intent === 'negative';
@@ -59,6 +74,7 @@ const getFullValues = (values) => {
     }
     return { ...item, intended };
   });
+
   const normalizedValues = intendedValues.map((item, i) => {
     const { intent, intended } = item;
     const isNegative = intent === 'negative';
@@ -71,10 +87,19 @@ const getFullValues = (values) => {
       : null;
     return { ...item, normal };
   });
-  const normalMinValue = min(normalizedValues, (d) => d.normal);
-  const normalMaxValue = max(normalizedValues, (d) => d.normal);
+
+  const notNullNormalizedValues = normalizedValues.filter(
+    (d) => d.normal !== null
+  );
+
+  const normalMinValue = min(notNullNormalizedValues, (d) => d.normal);
+  const normalMaxValue = max(notNullNormalizedValues, (d) => d.normal);
   const normalMedianValue = median(normalizedValues, (d) => d.normal);
-  const normalDeviationValue = deviation(normalizedValues, (d) => d.normal);
+  const normalDeviationValue = deviation(
+    notNullNormalizedValues,
+    (d) => d.normal
+  );
+
   const classificateddValues = normalizedValues.map((item) => {
     const std = item.standard?.value;
     let cls = '';
@@ -105,4 +130,18 @@ const getFullValues = (values) => {
       normalDeviation: normalDeviationValue,
     };
   });
+};
+
+const getGroupProps = (item) => {
+  const {
+    classification,
+    intended,
+    intent,
+    normal,
+    old,
+    original,
+    value,
+    ...rest
+  } = item;
+  return { ...rest };
 };

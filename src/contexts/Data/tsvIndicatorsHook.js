@@ -8,9 +8,9 @@ export const useTsvIndicators = (year) => {
   const url = `./data/indicators_${year}.tsv?t=${Date.now()}`;
   const [communes, setCommunes] = useState([]);
   const [standars, setStandars] = useState([]);
-  const [uglyFeatures, setUglyFeatures] = useState([]);
+  const [uglyIndicators, setUglyIndicators] = useState([]);
 
-  const features = uglyFeatures
+  const indicators = uglyIndicators
     .reduce((out, row, i) => {
       const { cut: commune } = row;
       Object.keys(row).map((code) => {
@@ -55,8 +55,7 @@ export const useTsvIndicators = (year) => {
     .map((d) => {
       const standard = standars.find((dd) => dd.indicatorId === d.code);
       return { ...d, standard };
-    })
-    .filter((d) => d.commune !== undefined);
+    });
 
   useEffect(() => {
     (async () => {
@@ -65,18 +64,19 @@ export const useTsvIndicators = (year) => {
       const standars = uglyStandars.map((d) => {
         const value = d.amount !== '' ? d.amount * 1 : null;
         const max = d.max !== '' ? d.max * 1 : null;
-        return { ...d, value };
+        const min = d.min !== '' ? d.min * 1 : null;
+        return { ...d, value, max, min };
       });
       try {
         const response = await fetch(url);
         const result = await response.text();
-        const features = tsvParse(result);
+        const indicators = tsvParse(result);
         setCommunes(communes);
         setStandars(standars);
-        setUglyFeatures(features);
+        setUglyIndicators(indicators);
       } catch (err) {}
     })();
   }, [year]);
 
-  return { indicators: features };
+  return { indicators };
 };
