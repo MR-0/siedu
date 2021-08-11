@@ -80,11 +80,11 @@ export class Chart extends Component {
     this.groups.data(data);
     this.indicators.data(d => d.values);
     this.indicators
-      .filter(d => d.values.length)
+      .filter(d => d.values.filter(d => d.value !== null).length)
       .attr('stroke', 'transparent')
       .attr('fill', d => fills[d.classification]);
     this.indicators
-      .filter(d => !d.values.length)
+      .filter(d => !d.values.filter(d => d.value !== null).length)
       .attr('fill', 'transparent')
       .attr('stroke', '#aaa');
     this.evolution
@@ -95,7 +95,7 @@ export class Chart extends Component {
         const current = fillsKeys.indexOf(d.classification);
         const old = fillsKeys.indexOf(d.oldClassification);
 
-        if (old === -1) return '';
+        if (old === -1 || current === -1) return '';
         if (current > old) return 'a';
         if (current < old) return 'b';
         if (current === old) return 'c';

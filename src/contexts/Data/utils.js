@@ -106,20 +106,21 @@ const getFullValues = (values) => {
 
   const classificateddValues = normalizedValues.map((item) => {
     const { standard } = item;
-    const std = (standard.normal =
-      standard?.value ?? (normalMaxValue * 100) / maxValue);
+    const hasStd = standard?.value !== undefined && standard?.value !== null;
+    const stdNorm = hasStd ? (normalMaxValue * 100) / maxValue : null;
     let cls = '';
-    if (std) {
-      if (item.normal < std - normalDeviationValue) cls = 'high';
-      if (item.normal >= std - normalDeviationValue) cls = 'medium';
-      if (item.normal >= std - normalDeviationValue * 0.5) cls = 'low';
-      if (item.normal >= std) cls = 'zero';
+    if (stdNorm) {
+      if (item.normal < stdNorm - normalDeviationValue) cls = 'high';
+      if (item.normal >= stdNorm - normalDeviationValue) cls = 'medium';
+      if (item.normal >= stdNorm - normalDeviationValue * 0.5) cls = 'low';
+      if (item.normal >= stdNorm) cls = 'zero';
     } else {
       if (item.normal < difValue * 0.25) cls = 'high';
       if (item.normal >= difValue * 0.25) cls = 'medium';
       if (item.normal >= difValue * 0.5) cls = 'low';
       if (item.normal >= difValue * 0.75) cls = 'zero';
     }
+    if (standard) standard.normal = stdNorm;
     return { ...item, classification: cls };
   });
 
