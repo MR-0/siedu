@@ -78,8 +78,8 @@ const getFullValues = (values) => {
     return { ...item, intended };
   });
 
-  const normalizedValues = intendedValues.map((item, i) => {
-    const { standard, intent, intended } = item;
+  const normalizedValues = intendedValues.map((item) => {
+    const { intent, intended } = item;
     const isNegative = intent === 'negative';
     const value = isNegative ? intended : intended - minValue;
     const isNumber = typeof intended === 'number';
@@ -88,8 +88,6 @@ const getFullValues = (values) => {
         ? (value * 100) / difValue
         : difValue
       : null;
-    standard.normal =
-      standard.value !== null ? (standard.value * normal) / intended : null;
 
     return { ...item, normal };
   });
@@ -107,7 +105,9 @@ const getFullValues = (values) => {
   );
 
   const classificateddValues = normalizedValues.map((item) => {
-    const std = item.standard.normal;
+    const { standard } = item;
+    const std = (standard.normal =
+      standard?.value ?? (normalMaxValue * 100) / maxValue);
     let cls = '';
     if (std) {
       if (item.normal < std - normalDeviationValue) cls = 'high';
