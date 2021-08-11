@@ -53,7 +53,7 @@ export const useTsvIndicators = (year) => {
       return out;
     }, [])
     .map((d) => {
-      const standard = standars.find((dd) => dd.indicatorId === d.code);
+      const standard = standars.find((dd) => dd.indicatorId === d.code) || {};
       return { ...d, standard };
     });
 

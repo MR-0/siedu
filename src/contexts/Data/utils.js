@@ -9,18 +9,21 @@ export const nameGroups = (data, fun, trans) =>
 
 export const groupFeature = (data, key, transform) => {
   const incompleteGroups = nameGroups(data, (d) => d[key], transform);
-  // TODO: Esto no sirve para nada
   const groups = incompleteGroups.map((group) => {
     const { values } = group;
-    const props = getGroupProps(values[0]);
-    const oldProps = getGroupProps(values[0].old);
     const oldValues = values.map((d) => d.old);
+    const props = getProps(values);
+    const oldProps = getProps(oldValues);
+    const itemProps = getItemProps(values[0]);
+    const oldItemProps = getItemProps(values[0].old);
 
     return {
       ...group,
       ...props,
+      ...itemProps,
       old: {
         ...oldProps,
+        ...oldItemProps,
         values: oldValues,
       },
     };
@@ -76,7 +79,7 @@ const getFullValues = (values) => {
   });
 
   const normalizedValues = intendedValues.map((item, i) => {
-    const { intent, intended } = item;
+    const { standard, intent, intended } = item;
     const isNegative = intent === 'negative';
     const value = isNegative ? intended : intended - minValue;
     const isNumber = typeof intended === 'number';
@@ -85,6 +88,9 @@ const getFullValues = (values) => {
         ? (value * 100) / difValue
         : difValue
       : null;
+    standard.normal =
+      standard.value !== null ? (standard.value * normal) / intended : null;
+
     return { ...item, normal };
   });
 
@@ -101,7 +107,7 @@ const getFullValues = (values) => {
   );
 
   const classificateddValues = normalizedValues.map((item) => {
-    const std = item.standard?.value;
+    const std = item.standard.normal;
     let cls = '';
     if (std) {
       if (item.normal < std - normalDeviationValue) cls = 'high';
@@ -132,16 +138,29 @@ const getFullValues = (values) => {
   });
 };
 
-const getGroupProps = (item) => {
-  const {
-    classification,
-    intended,
-    intent,
-    normal,
-    old,
-    original,
-    value,
-    ...rest
-  } = item;
-  return { ...rest };
+const getItemProps = (item) => {
+  const { city, code, commune, communeName, region, standard } = item;
+  return { city, code, commune, communeName, region, standard };
+};
+
+const getProps = (values) => {
+  const notNullValues = values.filter((d) => d.value !== null);
+  const minValue = min(notNullValues, (d) => d.value);
+  const maxValue = max(notNullValues, (d) => d.value);
+  const medianValue = median(values, (d) => d.value);
+  const deviationValue = deviation(values, (d) => d.value);
+  const normalMinValue = min(notNullValues, (d) => d.normal);
+  const normalMaxValue = max(notNullValues, (d) => d.normal);
+  const normalMedianValue = median(values, (d) => d.normal);
+  const normalDeviationValue = deviation(values, (d) => d.normal);
+  return {
+    min: minValue,
+    max: maxValue,
+    median: medianValue,
+    deviation: deviationValue,
+    normalMin: normalMinValue,
+    normalMax: normalMaxValue,
+    normalMedian: normalMedianValue,
+    normalDeviation: normalDeviationValue,
+  };
 };
