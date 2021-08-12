@@ -107,7 +107,9 @@ const getFullValues = (values) => {
   const classificateddValues = normalizedValues.map((item) => {
     const { standard } = item;
     const hasStd = standard?.value !== undefined && standard?.value !== null;
-    const stdNorm = hasStd ? (normalMaxValue * 100) / maxValue : null;
+    const stdNorm = hasStd
+      ? ((standard.value - minValue) * 100) / difValue
+      : null;
     let cls = '';
     if (stdNorm) {
       if (item.normal < stdNorm - normalDeviationValue) cls = 'high';

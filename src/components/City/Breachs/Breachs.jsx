@@ -13,6 +13,7 @@ export const Breachs = () => {
     .map(compromise => {
       const indicators = compromise.indicators
         .map( indicator => {
+          console.log(indicator);
           const { indicatorId } = indicator;
           const { values:allValues } = metrics.get(indicatorId);
           const { values:allNationalValues } = metrics.getAll(indicatorId);
@@ -32,6 +33,8 @@ export const Breachs = () => {
     // .filter(d => d.median)
     // --> menor es peor
     .sort((a,b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0);
+
+  console.log(worst);
   const worstChunks = chunks(worst, 2);
 
   return (
