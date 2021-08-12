@@ -153,8 +153,10 @@ const addPosition = (data, gut, width) => {
 
 const getClassification = (indicator) => {
   const { values, normalDeviation, standard } = indicator;
-  const std = standard.normal;
+  const std = standard?.normal;
   const medianValue = median(values, d => d.normal);
+
+  if (std === undefined) return 'undefined';
 
   if (std !== null) {
     if (medianValue >= std) return 'zero';
