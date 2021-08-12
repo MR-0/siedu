@@ -24,7 +24,6 @@ export const Breachs = () => {
     // --> menor es peor
     .sort((a,b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0);
 
-  console.log(worst);
   const worstChunks = chunks(worst, 2);
 
   return (
