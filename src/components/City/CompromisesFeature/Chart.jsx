@@ -18,7 +18,6 @@ export class Chart extends Component {
       // old.values = values.map(d => d.old);
       return { ...group, values };
     });
-    console.log(dataNorm, '');
     return dataNorm;
   }
 

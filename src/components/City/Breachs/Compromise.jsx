@@ -106,7 +106,7 @@ const Body = ({ indicators }) => {
                 max={nationalMax}
               />
               {worstestValues
-                .map((d) => <Bar key={d.code +'-'+ d.commune +'-'+ d.year} data={d} max={nationalMax} />
+                .map((d) => <Bar key={d.code +'-'+ d.commune +'-'+ d.year} data={d} max={100} />
                 )}
               <Bar
                 className="small gray"
@@ -167,14 +167,15 @@ const Bar = ({ className, data, max }) => {
   const { row, middle, col3, gutSm } = els;
   const { bar } = style;
   // console.log(data);
-  const { communeName: name, intentded: value, value: real, intent } = data;
-  const old = data.old?.intentded;
+  const { communeName, normal, value, intent } = data;
+  const old = data.old?.normal;
+  const attrs = { className, value: normal, real: value, max, old, std:max, int: intent }
 
   return (
     <li className={clsx(bar, row, middle, gutSm, className)}>
-      <h5 className={col3}>{name}</h5>
+      <h5 className={col3}>{ communeName }</h5>
       <div className={col3}>
-        <SVGBar {...{ className, value, real, max, old, std:max, int: intent }} />
+        <SVGBar { ...attrs } />
       </div>
     </li>
   )
