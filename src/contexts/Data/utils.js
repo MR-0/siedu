@@ -105,10 +105,13 @@ const getFullValues = (values) => {
   );
 
   const classificateddValues = normalizedValues.map((item) => {
-    const { standard } = item;
+    const { intent, standard } = item;
     const hasStd = standard?.value !== undefined && standard?.value !== null;
+    const isNegative = intent;
     const stdNorm = hasStd
-      ? ((standard.value - minValue) * 100) / difValue
+      ? isNegative
+        ? ((maxValue - standard.value) * 100) / difValue
+        : ((standard.value - minValue) * 100) / difValue
       : null;
     let cls = '';
     if (stdNorm) {

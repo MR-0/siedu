@@ -21,6 +21,7 @@ const useIndicators = year => {
     const key = `${ code }_${ commune }`;
     const intent = contents.find(cont => cont.indicatorId === code)?.intent;
     const old = oldIndicatorsKeys[key];
+    if (old) old.intent = intent;
     return { ...indicator, intent, old };
   });
 };
@@ -37,8 +38,10 @@ const createFilterGroup = (groups, city) => {
     localValues,
     get: (name) => {
       const group = groups.find((d) => d.name === name);
+      const { old } = group;
       const values = (group.values || []).filter(d => d.city === city?.code);
-      return group && { ...group, values };
+      old.values = (old.values || []).filter(d => d.city === city?.code);
+      return group && { ...group, values, old };
     },
     getAll: (name) => groups.find((d) => d.name === name),
   }

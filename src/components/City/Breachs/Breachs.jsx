@@ -5,32 +5,22 @@ import { Legend } from '../common/Legend';
 import { Compromise } from './Compromise';
 import { useDataValue } from 'contexts/Data';
 
-// TODO: Pensando que vamos a cortar
-
 export const Breachs = () => {
   const { metrics, compromises } = useDataValue();
   const worst = compromises
     .map(compromise => {
       const indicators = compromise.indicators
         .map( indicator => {
-          console.log(indicator);
-          const { indicatorId } = indicator;
-          const { values:allValues } = metrics.get(indicatorId);
-          const { values:allNationalValues } = metrics.getAll(indicatorId);
-          const values = allValues?.filter(d => d.value !== null) || [];
-          const nationalValues = allNationalValues?.filter(d => d.value !== null) || [];
-          const medianValue = median(values, d => d.intentded);
-          const nationalAbsMin = min(nationalValues, d => d.value);
-          const nationalMax = max(nationalValues, d => d.intentded);
-          const nationalAbsMax = max(nationalValues, d => d.value);
-          const nationalMedian = median(nationalValues, d => d.intentded);
-          return { ...indicator, values, median: medianValue, nationalMedian, nationalMax, nationalAbsMax, nationalAbsMin }
-        })
-        .filter(d => d.median || d.median === 0);
-      const medianValue = median(indicators, d => d.median);
+          const { indicatorId:id } = indicator;
+          const { values } = metrics.get(id);
+          const { value, normal, intended, ...rest } = values[0];
+          const notNullValues = values?.filter(d => d.value !== null) || [];
+          const medianValue = median(notNullValues, d => d.normal);
+          return { ...indicator, ...rest, values, cityMedian: medianValue };
+        });
+      const medianValue = median(indicators, d => d.cityMedian);
       return { ...compromise, indicators, median: medianValue };
     })
-    // .filter(d => d.median)
     // --> menor es peor
     .sort((a,b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0);
 

@@ -10,15 +10,15 @@ export class Chart extends Component {
     const width = this.getWidth();
     const dataPos = addPosition(dataBase, this.gut, width);
     const dataNorm = dataPos.map(group => {
-      const { old } = group;
       const values = group.values.map(indicator => {
         const classification = getClassification(indicator);
         const oldClassification = getClassification(indicator.old);
         return { ...indicator, classification, oldClassification };
       });
       // old.values = values.map(d => d.old);
-      return { ...group, values, old };
+      return { ...group, values };
     });
+    console.log(dataNorm, '');
     return dataNorm;
   }
 
@@ -155,7 +155,6 @@ const addPosition = (data, gut, width) => {
 const getClassification = (indicator) => {
   const { values, normalDeviation, standard } = indicator;
   const std = standard.normal;
-  // console.log(indicator);
   const medianValue = median(values, d => d.normal);
 
   if (std !== null) {

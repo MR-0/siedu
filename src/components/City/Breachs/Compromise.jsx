@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { max, median, select } from 'd3';
+import React, { useEffect, useRef, useState } from 'react';
+import { select } from 'd3';
 import clsx from 'clsx';
 import { SVGBar } from '../common/SVGBar';
 import { styles as els } from 'elementary';
@@ -166,6 +166,7 @@ const Standard = ({ value, max, base }) => {
 const Bar = ({ className, data, max }) => {
   const { row, middle, col3, gutSm } = els;
   const { bar } = style;
+  // console.log(data);
   const { communeName: name, intentded: value, value: real, intent } = data;
   const old = data.old?.intentded;
 
