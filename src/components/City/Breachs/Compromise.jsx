@@ -52,27 +52,16 @@ const Body = ({ indicators }) => {
     .filter(d => d.values.length)
     .sort((a, b) => a.median > b.median ? 1 : a.median < b.median ? -1 : 0)
   const worstest = worst[0];
-  const standard = worstest?.values[0].standard;
-  const worstestValues = worstest?.values
-    .sort((a, b) => {
-      return a.intentded > b.intentded ? 1 : a.intentded < b.intentded ? -1 : 0
-    })
-    .filter(d => {
-      if (standard && standard.value) {
-        const isNegative = standard.intent === 'negative';
-        return isNegative
-          ? d.value > standard.value
-          : d.value < standard.value
-      }
-      return true;
-    })
+  const { standard } = worstest;
+  const worstestValues = worstest.values
+    .sort((a, b) => a.normal > b.normal ? 1 : a.normal < b.normal ? -1 : 0)
     .slice(0,10) || [];
 
   if (worstest) {
-    const { attributeIcon, nationalMax, nationalAbsMax, nationalAbsMin, nationalMedian } = worstest;
-    const standardValue = standard.intent === 'negative'
-      ? standard.max - standard.value - nationalAbsMin
-      : standard.value - nationalAbsMin;
+    const { attributeIcon, normalMax, nationalMedian } = worstest;
+    const maxValue = Math.max(normalMax, standard?.normal || 0);
+
+    console.log(worstest, standard, maxValue);
 
     if (!icon) fetch('./images/icons/' + attributeIcon)
       .then(response => response.text())
@@ -101,9 +90,9 @@ const Body = ({ indicators }) => {
                 className="small gray"
                 data={{
                   communeName: 'Mejor indicador nacional',
-                  intentded: nationalMax
+                  intentded: maxValue
                 }}
-                max={nationalMax}
+                max={maxValue}
               />
               {worstestValues
                 .map((d) => <Bar key={d.code +'-'+ d.commune +'-'+ d.year} data={d} max={100} />
@@ -114,13 +103,13 @@ const Body = ({ indicators }) => {
                   communeName: 'Media nacional',
                   intentded: nationalMedian
                 }}
-                max={nationalMax}
+                max={maxValue}
               />
             </ul>
-            {(standard && standardValue !== null) && (
+            {(standard.normal !== null) && (
               <Standard
-                value={standardValue}
-                max={nationalAbsMax - nationalAbsMin}
+                value={standard.normal}
+                max={maxValue}
                 base={5}
                 />
             )}
