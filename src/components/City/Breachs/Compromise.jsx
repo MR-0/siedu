@@ -58,10 +58,8 @@ const Body = ({ indicators }) => {
     .slice(0,10) || [];
 
   if (worstest) {
-    const { attributeIcon, normalMax, nationalMedian } = worstest;
+    const { attributeIcon, normalMax, normalMedian } = worstest;
     const maxValue = Math.max(normalMax, standard?.normal || 0);
-
-    console.log(worstest, standard, maxValue);
 
     if (!icon) fetch('./images/icons/' + attributeIcon)
       .then(response => response.text())
@@ -90,7 +88,7 @@ const Body = ({ indicators }) => {
                 className="small gray"
                 data={{
                   communeName: 'Mejor indicador nacional',
-                  intentded: maxValue
+                  normal: maxValue
                 }}
                 max={maxValue}
               />
@@ -101,7 +99,7 @@ const Body = ({ indicators }) => {
                 className="small gray"
                 data={{
                   communeName: 'Media nacional',
-                  intentded: nationalMedian
+                  normal: normalMedian
                 }}
                 max={maxValue}
               />
@@ -155,10 +153,17 @@ const Standard = ({ value, max, base }) => {
 const Bar = ({ className, data, max }) => {
   const { row, middle, col3, gutSm } = els;
   const { bar } = style;
-  // console.log(data);
-  const { communeName, normal, value, intent } = data;
+  console.log('-->', data);
+  const { communeName, normal, value, classification } = data;
   const old = data.old?.normal;
-  const attrs = { className, value: normal, real: value, max, old, std:max, int: intent }
+  const attrs = {
+    className,
+    value: normal,
+    real: value,
+    max,
+    old,
+    cat: classification
+  }
 
   return (
     <li className={clsx(bar, row, middle, gutSm, className)}>
