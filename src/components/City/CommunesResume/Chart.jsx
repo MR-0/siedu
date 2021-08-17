@@ -125,7 +125,7 @@ export class Chart extends Component {
 const groupStack = (data, w) => {
   const min = 20;
   const order = ['high', 'medium', 'low', 'zero', 'undefined'];
-  const stack = groups(data, d => d.classification || 'undefined')
+  const stack = groups(data, d => d.classification)
     .map(([name, values]) => ({ name, values }))
     .sort((a, b) => {
       const i = order.indexOf(a.name);

@@ -8,6 +8,8 @@ import style from './Compromise.module.scss';
 export const Compromise = ({ data }) => {
   const { holder } = style;
   const { number, name, indicators, noIndicatorsBreachesMsg } = data;
+  console.log(data)
+
   return (
     <div className={holder}>
       <Head number={number} name={name} />
@@ -54,6 +56,7 @@ const Body = ({ indicators }) => {
   const worstest = worst[0];
   const { standard } = worstest;
   const worstestValues = worstest.values
+    .filter(d => d.normal !== null)
     .sort((a, b) => a.normal > b.normal ? 1 : a.normal < b.normal ? -1 : 0)
     .slice(0,10) || [];
 
@@ -153,13 +156,14 @@ const Standard = ({ value, max, base }) => {
 const Bar = ({ className, data, max }) => {
   const { row, middle, col3, gutSm } = els;
   const { bar } = style;
-  console.log('-->', data);
-  const { communeName, normal, value, classification } = data;
+  // console.log('-->', data);
+  const { communeName, normal, value, original, intent, classification } = data;
   const old = data.old?.normal;
+  const real = intent === 'boolean' ? original : value;
   const attrs = {
     className,
     value: normal,
-    real: value,
+    real,
     max,
     old,
     cat: classification

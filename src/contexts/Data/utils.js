@@ -1,4 +1,4 @@
-import { deviation, groups, max, median, min } from 'd3';
+import { deviation, groups, max, median, min, quantile } from 'd3';
 
 export const nameGroups = (data, fun, trans) =>
   groups(data, fun).map((d) => {
@@ -99,6 +99,21 @@ const getFullValues = (values) => {
   const normalMinValue = min(notNullNormalizedValues, (d) => d.normal);
   const normalMaxValue = max(notNullNormalizedValues, (d) => d.normal);
   const normalMedianValue = median(normalizedValues, (d) => d.normal);
+  const normalQuantile25Value = quantile(
+    normalizedValues,
+    0.25,
+    (d) => d.normal
+  );
+  const normalQuantile50Value = quantile(
+    normalizedValues,
+    0.5,
+    (d) => d.normal
+  );
+  const normalQuantile75Value = quantile(
+    normalizedValues,
+    0.75,
+    (d) => d.normal
+  );
   const normalDeviationValue = deviation(
     notNullNormalizedValues,
     (d) => d.normal
@@ -113,17 +128,24 @@ const getFullValues = (values) => {
         ? ((maxValue - standard.value) * 100) / difValue
         : ((standard.value - minValue) * 100) / difValue
       : null;
-    let cls = '';
-    if (stdNorm) {
-      if (item.normal < stdNorm - normalDeviationValue) cls = 'high';
-      if (item.normal >= stdNorm - normalDeviationValue) cls = 'medium';
-      if (item.normal >= stdNorm - normalDeviationValue * 0.5) cls = 'low';
-      if (item.normal >= stdNorm) cls = 'zero';
-    } else {
-      if (item.normal < difValue * 0.25) cls = 'high';
-      if (item.normal >= difValue * 0.25) cls = 'medium';
-      if (item.normal >= difValue * 0.5) cls = 'low';
-      if (item.normal >= difValue * 0.75) cls = 'zero';
+    let cls = 'undefined';
+    if (item.value !== null) {
+      if (stdNorm) {
+        if (item.normal < stdNorm - normalDeviationValue) cls = 'high';
+        if (item.normal >= stdNorm - normalDeviationValue) cls = 'medium';
+        if (item.normal >= stdNorm - normalDeviationValue * 0.5) cls = 'low';
+        if (item.normal >= stdNorm) cls = 'zero';
+      } else {
+        if (intent === 'boolean') {
+          if (item.value < 1) cls = 'high';
+          else cls = 'zero';
+        } else {
+          if (item.normal < normalQuantile25Value) cls = 'high';
+          if (item.normal >= normalQuantile25Value) cls = 'medium';
+          if (item.normal >= normalQuantile50Value) cls = 'low';
+          if (item.normal >= normalQuantile75Value) cls = 'zero';
+        }
+      }
     }
     if (standard) standard.normal = stdNorm;
     return { ...item, classification: cls };
