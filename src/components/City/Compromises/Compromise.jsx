@@ -62,18 +62,17 @@ const Attribute = ({ attribute, commune }) => {
 const Indicator = ({ data, commune }) => {
   const { metrics } = useDataValue();
   const { description, indicatorId } = data;
-  const { values, median, max: relMax } = metrics.getAll(indicatorId);
-  const { value, intentded, original, old, standard, intent } = values.find(d => d.commune === commune.cut);
-  const max = Math.max(relMax, standard.value
-    ? standard.value * intentded / value
-    : 0
-  );
+  const metricsValues = metrics.getAll(indicatorId);
+  const { values, normalMedian, normalMax, standard } = metricsValues;
+  const { value, normal, original, old, classification } = values.find(d => d.commune === commune.cut);
+  console.log(metricsValues);
+  const max = Math.max(normalMax, standard.normal || 0);
   return (
     <div className={ clsx(style.indicator, els.col2) }>
       <div className={ style.bars }>
-        <SVGBar className="small" value={old.intentded} real={old.value} max={max} std={standard.value} int={ intent } />
-        <SVGBar value={intentded} real={value} desc={original} max={max} std={standard.value} int={ intent } />
-        <SVGBar className="small gray" value={median} max={max} />
+        <SVGBar className="small" value={old.normal} real={old.value} max={max} std={standard.value} cat={old.classification} />
+        <SVGBar value={normal} real={value} desc={original} max={max} std={standard.value} cat={ classification } />
+        <SVGBar className="small gray" value={normalMedian} max={max} />
       </div>
       <p>{ description }</p>
       { standard.type === 'std' && (

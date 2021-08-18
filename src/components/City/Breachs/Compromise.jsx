@@ -8,7 +8,6 @@ import style from './Compromise.module.scss';
 export const Compromise = ({ data }) => {
   const { holder } = style;
   const { number, name, indicators, noIndicatorsBreachesMsg } = data;
-  console.log(data)
 
   return (
     <div className={holder}>

@@ -4,6 +4,7 @@ import { useDataValue } from 'contexts/Data';
 import { Chart } from './Chart';
 import { styles as els } from 'elementary';
 import styles from './Communes.module.scss';
+import { group } from 'd3';
 
 export const Communes = () => {
   const { communes } = useDataValue();
@@ -11,10 +12,10 @@ export const Communes = () => {
   const sortedCommunes = communes.localValues.sort((a,b) => {
     return a.name > b.name
       ? 1
-      : a.name < b.name
+      : a.name.replace(/ñ/i, 'n') < b.name.replace(/ñ/i, 'n')
         ? -1
         : 0;
-  })
+  });
   return sortedCommunes.map((commune, i) => {
     return (
       <div key={i} className={ clsx(row, middle, styles.communes) }>

@@ -27,21 +27,6 @@ export const groupFeature = (data, key, transform) => {
         values: oldValues,
       },
     };
-
-    // const noNullValues = values.filter((d) => d.normal !== null);
-    // const minValue = min(noNullValues, (d) => d.normal);
-    // const maxValue = max(noNullValues, (d) => d.normal);
-    // const medianValue = median(noNullValues, (d) => d.normal);
-    // const deviationValue = deviation(noNullValues, (d) => d.normal);
-    // return {
-    //   ...group,
-    //   min: minValue,
-    //   max: maxValue,
-    //   dif: maxValue - minValue,
-    //   median: medianValue,
-    //   deviation: deviationValue,
-    //   standard: values[0].standard,
-    // };
   });
 
   return groups;
@@ -168,7 +153,7 @@ const getFullValues = (values) => {
 
 const getItemProps = (item) => {
   const { city, code, commune, communeName, region, standard } = item;
-  return { city, code, commune, communeName, region, standard };
+  return { commune, standard };
 };
 
 const getProps = (values) => {
