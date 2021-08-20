@@ -3,14 +3,7 @@ import { select } from 'd3';
 import clsx from 'clsx';
 import style from './SVGBar.module.scss';
 
-const base = 5;
-const getRect = (element, value, max) => {
-  const rect = element?.getBoundingClientRect().toJSON() || {};
-  const { width:rectWidth } = rect;
-  const width = max && (base + ((rectWidth - base) * value / max));
-  return { ...rect, width };
-};
-const posText = (text, width) => {
+const posText = (text, width, base) => {
   const bbox = text.node().getBBox();
   const over = width > bbox.width + base * 2 + 10;
   text
@@ -19,40 +12,52 @@ const posText = (text, width) => {
   if (!over) text.attr('fill', '#222');
 };
 
-export const SVGBar = ({ className, value, real, desc, max, old, cat }) => {
+const fills = {
+  high: '#EF6350',
+  medium: '#F5A196',
+  low: '#FCDAD5',
+  zero: '#A8C366',
+  undefined: 'transparent'
+};
+
+const textFills = {
+  high: '#FFF',
+  medium: '#222',
+  low: '#222',
+  zero: '#FFF',
+  undefined: '#222'
+};
+
+export const SVGBar = ({ className, value, real, desc, max, old, cat, base = 5 }) => {
   className = (className || '').split(' ').map(key => style[key]);
   const svg = useRef();
   const { bar:barStyle, icon } = style;
+  const [ rect, setRect ] = useState({});
   const [ elements, setElements ] = useState({});
-  const { width, height } = getRect(svg.current, value, max);
   const { bar, text } = elements;
-  const fills = {
-    high: '#EF6350',
-    medium: '#F5A196',
-    low: '#FCDAD5',
-    zero: '#A8C366',
-    undefined: 'transparent'
-  };
+  const width = max && (base + ((rect.width - base) * value / max));
+
+  console.log('bar ->', rect.width);
 
   if (bar) bar
     .attr('x', 0)
-    .attr('y', 1)
-    .attr('height', height - 2)
     .attr('width', width)
     .attr('fill', fills[cat]);
 
   if (text) text
-    .attr('y', (height + 22) * 0.5)
-    .attr('dy', '-0.5em')
-    .attr('fill', () => {
-      if (cat === 'medium' || cat === 'low') return '#222';
-      else return '#fff';
-    })
-    .call(posText, width);
+    .attr('fill', textFills[cat])
+    .call(posText, width, base);
 
   useEffect(() => {
-    const bar = select(svg.current).append('rect');
-    const text = select(svg.current).append('text');
+    const rect = svg.current.getBoundingClientRect();
+    const bar = select(svg.current)
+      .append('rect')
+      .attr('y', 1)
+      .attr('height', rect.height - 2);
+    const text = select(svg.current)
+      .append('text')
+      .attr('y', (rect.height + 22) * 0.5)
+      .attr('dy', '-0.5em');
 
     if (real !== undefined && !/small/.test(className)) {
       text
@@ -73,6 +78,7 @@ export const SVGBar = ({ className, value, real, desc, max, old, cat }) => {
         });
     }
 
+    setRect(rect);
     setElements({ bar, text });
   }, []);
 

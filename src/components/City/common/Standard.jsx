@@ -1,22 +1,29 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { select } from 'd3';
 import style from './Standard.module.scss';
 
 export const Standard = ({ value, max, base }) => {
   const svg = useRef();
+  const [ rect, setRect ] = useState({});
+  const [ line, setLine ] = useState(null);
   const { standard } = style;
+  const width = max && (base + ((rect.width - base) * value / max));
+
+  console.log('standard ->', rect.width);
+  
+  if (line) line
+    .attr('x1', width)
+    .attr('x2', width)
 
   useEffect(() => {
-    const rect = svg.current.getBoundingClientRect().toJSON();
-    const { width, height } = rect;
-    const result = base + (width - base) * value / max;
-    const bar = select(svg.current)
+    const rect = svg.current.getBoundingClientRect();
+    const line = select(svg.current)
       .append('line')
-      .attr('x1', (max && result) || 0)
-      .attr('x2', (max && result) || 0)
       .attr('y1', 0)
-      .attr('y2', height)
-      .attr('stroke', '#000')
+      .attr('y2', rect.height)
+      .attr('stroke', '#000');
+    setRect(rect);
+    setLine(line);
   }, []);
 
   return (
