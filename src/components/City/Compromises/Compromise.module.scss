@@ -32,7 +32,7 @@
   .bars {
     margin-bottom: 0.7rem;
   }
-  .bars > div {
+  .bars :global .svg-bar {
     margin-bottom: 0.3rem;
   }
   .standard {

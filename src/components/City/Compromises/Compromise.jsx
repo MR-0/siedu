@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { groups } from 'd3';
 import { useDataValue } from 'contexts/Data';
 import { Header } from '../common/Header';
 import { SVGBar } from '../common/SVGBar';
+import { BooleanIcon } from '../common/BooleanIcon';
 
 import { styles as els } from 'elementary';
 import style from './Compromise.module.scss';
@@ -64,15 +65,22 @@ const Indicator = ({ data, commune }) => {
   const { description, indicatorId } = data;
   const metricsValues = metrics.getAll(indicatorId);
   const { values, normalMedian, normalMax, standard } = metricsValues;
-  const { value, normal, original, old, classification } = values.find(d => d.commune === commune.cut);
-  console.log(metricsValues);
+  const { value, normal, original, old, classification, intent } = values.find(d => d.commune === commune.cut);
+  const isBoolean = intent === 'boolean';
   const max = Math.max(normalMax, standard.normal || 0);
   return (
     <div className={ clsx(style.indicator, els.col2) }>
       <div className={ style.bars }>
-        <SVGBar className="small" value={old.normal} real={old.value} max={max} std={standard.value} cat={old.classification} />
-        <SVGBar value={normal} real={value} desc={original} max={max} std={standard.value} cat={ classification } />
-        <SVGBar className="small gray" value={normalMedian} max={max} />
+        { isBoolean && (
+          <BooleanIcon valuie={value} />
+        ) }
+        { !isBoolean && (
+          <Fragment> 
+            <SVGBar className="small" value={old.normal} real={old.value} max={max} std={standard.value} cat={old.classification} />
+            <SVGBar value={normal} real={value} desc={original} max={max} std={standard.value} cat={ classification } />
+            <SVGBar className="small gray" value={normalMedian} max={max} />
+          </Fragment>
+        ) }
       </div>
       <p>{ description }</p>
       { standard.type === 'std' && (

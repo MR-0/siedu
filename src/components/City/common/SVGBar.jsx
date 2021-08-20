@@ -77,7 +77,7 @@ export const SVGBar = ({ className, value, real, desc, max, old, cat }) => {
   }, []);
 
   return (
-    <div className={ clsx( barStyle, className ) }>
+    <div className={ clsx( barStyle, className, 'svg-bar' ) }>
       <svg ref={ svg }></svg>
     </div>
   )
