@@ -7,7 +7,7 @@ const base = 5;
 const getRect = (element, value, max) => {
   const rect = element?.getBoundingClientRect().toJSON() || {};
   const { width:rectWidth } = rect;
-  const width = max && (base + (rectWidth - base) * value / max);
+  const width = max && (base + ((rectWidth - base) * value / max));
   return { ...rect, width };
 };
 const posText = (text, width) => {

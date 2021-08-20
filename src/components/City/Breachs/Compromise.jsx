@@ -45,7 +45,7 @@ const Head = ({ number, name }) => {
 
 const Body = ({ indicators }) => {
   const [icon, setIcon] = useState(null);
-  const { row, col2, col4 } = els;
+  const { row, col2, col3, col4, gutSm } = els;
   const { body, bars, description } = style;
   const worst = indicators
     // .filter(d => d.median > 0)
@@ -108,11 +108,24 @@ const Body = ({ indicators }) => {
               />
             </ul>
             {(standard.normal !== null) && (
-              <Standard
-                value={standard.normal}
-                max={maxValue}
-                base={5}
-                />
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: '1rem',
+                width: 'calc(100% - 2rem)',
+                height: '100%'
+              }}>
+                <div style={{ height: '100%' }} className={clsx(row, gutSm)}>
+                  <div className={col3}>&nbsp;</div>
+                  <div className={col3}>
+                    <Standard
+                      value={standard.normal}
+                      max={maxValue}
+                      base={5}
+                      />
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         </div>

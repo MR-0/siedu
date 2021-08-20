@@ -76,14 +76,14 @@ const Indicator = ({ data, commune }) => {
           <BooleanIcon valuie={value} />
         ) }
         { !isBoolean && (
-          <div> 
-            <SVGBar className="small" value={old.normal} real={old.value} max={max} std={standard.value} cat={old.classification} />
-            <SVGBar value={normal} real={value} desc={original} max={max} std={standard.value} cat={ classification } />
+          <Fragment>
+            <SVGBar className="small" value={old.normal} real={old.value} max={max} cat={old.classification} />
+            <SVGBar value={normal} real={value} desc={original} max={max} cat={ classification } />
             <SVGBar className="small gray" value={normalMedian} max={max} />
-            {standard?.value && (
-              <Standard value={standard.value} max={max} base={5} />
+            {standard?.normal && (
+              <Standard value={standard.normal} max={max} base={5} />
             )}
-          </div>
+          </Fragment>
         ) }
       </div>
       <p>{ description }</p>

@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { select } from 'd3';
-import clsx from 'clsx';
-import { styles as els } from 'elementary';
 import style from './Standard.module.scss';
 
 export const Standard = ({ value, max, base }) => {
   const svg = useRef();
-  const { row, col3, gutSm } = els;
   const { standard } = style;
 
   useEffect(() => {
@@ -24,12 +21,7 @@ export const Standard = ({ value, max, base }) => {
 
   return (
     <div className={standard}>
-      <div className={clsx(row, gutSm)}>
-        <div className={col3}>&nbsp;</div>
-        <div className={col3}>
-          <svg ref={svg}></svg>
-        </div>
-      </div>
+      <svg ref={svg}></svg>  
     </div>
   )
 }
