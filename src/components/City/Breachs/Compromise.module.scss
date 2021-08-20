@@ -63,28 +63,3 @@
     letter-spacing: 0.05em;
   }
 }
-
-.standard {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 20;
-
-  div {
-    height: 100%;
-  }
-
-  svg {
-    display: block;
-    height: 100%;
-    width: calc(100% - 1rem);
-  }
-
-  svg line {
-    stroke: $tint-gray;
-    stroke-width: 2px;
-    stroke-dasharray: 3 5;
-  }
-}

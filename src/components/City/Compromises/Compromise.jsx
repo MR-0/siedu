@@ -3,6 +3,7 @@ import { groups } from 'd3';
 import { useDataValue } from 'contexts/Data';
 import { Header } from '../common/Header';
 import { SVGBar } from '../common/SVGBar';
+import { Standard } from '../common/Standard';
 import { BooleanIcon } from '../common/BooleanIcon';
 
 import { styles as els } from 'elementary';
@@ -75,11 +76,14 @@ const Indicator = ({ data, commune }) => {
           <BooleanIcon valuie={value} />
         ) }
         { !isBoolean && (
-          <Fragment> 
+          <div> 
             <SVGBar className="small" value={old.normal} real={old.value} max={max} std={standard.value} cat={old.classification} />
             <SVGBar value={normal} real={value} desc={original} max={max} std={standard.value} cat={ classification } />
             <SVGBar className="small gray" value={normalMedian} max={max} />
-          </Fragment>
+            {standard?.value && (
+              <Standard value={standard.value} max={max} base={5} />
+            )}
+          </div>
         ) }
       </div>
       <p>{ description }</p>
