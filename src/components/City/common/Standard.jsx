@@ -8,8 +8,6 @@ export const Standard = ({ value, max, base }) => {
   const [ line, setLine ] = useState(null);
   const { standard } = style;
   const width = max && (base + ((rect.width - base) * value / max));
-
-  console.log('standard ->', rect.width);
   
   if (line) line
     .attr('x1', width)

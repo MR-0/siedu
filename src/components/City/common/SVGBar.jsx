@@ -37,8 +37,6 @@ export const SVGBar = ({ className, value, real, desc, max, old, cat, base = 5 }
   const { bar, text } = elements;
   const width = max && (base + ((rect.width - base) * value / max));
 
-  console.log('bar ->', rect.width);
-
   if (bar) bar
     .attr('x', 0)
     .attr('width', width)
