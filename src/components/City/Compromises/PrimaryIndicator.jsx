@@ -13,8 +13,8 @@ export const PrimaryIndicator = ({ data }) => {
   const oldAngle = old.normal * Math.PI * part / old.normalMax;
   const medianAngle = normalMedian * Math.PI * part / normalMax;
   const std = standard?.normal;
-  const stdAngle = std && std * Math.PI * part / normalMax;
-  console.log('-->', data);
+  const stdAngle = std && (std * Math.PI * part / normalMax);
+  console.log('-->', data.attributeOrd, std, normalMax, stdAngle * 180 / Math.PI);
   return (
     <div>
       <div className={ style.holder }>

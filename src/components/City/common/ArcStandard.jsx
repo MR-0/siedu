@@ -7,9 +7,10 @@ export const ArcStandard = ({ radius, width, angle }) => {
   const ref = useRef();
   const [ line, setLine ] = useState(null);
   const [ text, setText ] = useState(null);
-  const cos = Math.cos(angle);
-  const sin = Math.sin(angle);
-  const isOverHalf = angle > Math.PI * 0.5;
+  const endAngle = Math.PI - angle;
+  const cos = Math.cos(endAngle);
+  const sin = Math.sin(endAngle);
+  const isOverHalf = endAngle > Math.PI * 0.5;
 
   if (line) line
     .attr('x1', cos * (radius - width * 0.5))
