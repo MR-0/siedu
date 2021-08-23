@@ -1,0 +1,14 @@
+@import 'styles/presets.scss';
+
+.svg {
+  text {
+    font-size: 10px;
+    letter-spacing: 0.03em;
+  }
+
+  line {
+    stroke: $tint-gray;
+    stroke-width: 2px;
+    stroke-dasharray: 3 2;
+  }
+}

@@ -1,0 +1,17 @@
+.holder {
+  position: relative;
+  margin-bottom: 1rem;
+  padding-top: 2rem;
+
+  svg {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  svg:first-child {
+    position: relative;
+  }
+}

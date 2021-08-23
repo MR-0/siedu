@@ -1,0 +1,35 @@
+.arc {
+  width: 100%;
+
+  text {
+    text-anchor: end;
+    font-size: 10px;
+  }
+
+  .guide {
+    fill: transparent;
+    stroke: #889;
+    stroke-dasharray: 4;
+    opacity: 0.5;
+  }
+
+  .bar {
+    fill: #889;
+
+    &.high {
+      fill: #ef6350;
+    }
+
+    &.medium {
+      fill: #f5a196;
+    }
+
+    &.low {
+      fill: #fcdad5;
+    }
+
+    &.zero {
+      fill: #a8c366;
+    }
+  }
+}
