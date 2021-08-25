@@ -1,0 +1,31 @@
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  padding: 10px;
+  margin: -15px -50vw 0;
+  background-color: #000a;
+  color: #fff;
+  pointer-events: none;
+  transform: translateX(calc(50vw - 50%)) translateY(calc(20px - 100%));
+  opacity: 0;
+  transition: opacity 0.3s, transform ease-out 0.3s;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: calc(50% - 8px);
+    border: 8px solid transparent;
+    border-top: 10px solid #000a;
+  }
+
+  &.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(calc(50vw - 50%)) translateY(-100%);
+  }
+
+  p {
+    margin: 0;
+  }
+}

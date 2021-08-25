@@ -4,7 +4,7 @@ import { Chart } from './Chart';
 import { styles as els } from 'elementary';
 import styles from './Compromise.module.scss';
 
-export const Compromise = ({ compromise, number, className, showTooltip, ...attrs }) => {
+export const Compromise = ({ compromise, number, className, ...attrs }) => {
   const { holder, title, titleNumber, indicators } = styles
   const { row, col2, col4, middle, gutNo, fit } = els;
   const { name, attributes } = compromise;
@@ -23,7 +23,6 @@ export const Compromise = ({ compromise, number, className, showTooltip, ...attr
         <Chart
           data={attributes}
           className={indicators}
-          tooltip={ showTooltip }
           {...attrs}
         />
       </div>

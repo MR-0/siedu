@@ -1,9 +1,11 @@
-import React, { Component, createRef } from 'react';
-import { median, select } from 'd3';
+import React, { Component, createRef, Fragment } from 'react';
+import { median, quantile, select } from 'd3';
+import { Tooltip } from '../common/Tooltip';
 import styles from './Compromise.module.scss';
 
 export class Chart extends Component {
   holder = createRef();
+  state = { tooltipData: null };
 
   getData () {
     const { data:dataBase } = this.props;
@@ -35,12 +37,16 @@ export class Chart extends Component {
       .attr('transform', d => `translate(${d.pos}, 0)`);
   }
 
+  handleShowTooltip () {
+    return (event, data) => {
+      event.stopPropagation();
+      this.setState({ tooltipData: data });
+    }
+  };
+
   drawIndicators() {
     const gut = 2;
-    const tooltip = this.props.tooltip || (() => {});
     const width = this.getWidth();
-    
-    bodyOver(() => tooltip(null));
     
     return this.groups
       .selectAll('rect.indicator')
@@ -50,7 +56,7 @@ export class Chart extends Component {
       .attr('width', width - gut)
       .attr('height', this.height)
       .attr('class', 'indicator')
-      .on('mouseover', tooltip);
+      .on('mouseover', this.handleShowTooltip());
   }
 
   drawEvolution() {
@@ -123,7 +129,39 @@ export class Chart extends Component {
 
   render() {
     const { className } = this.props;
-    return <div className={className} ref={this.holder}></div>;
+    const { tooltipData } = this.state;
+    const { standard, values, old, oldClassification, min, max, normalQuantile25, normalQuantile50, normalQuantile75, deviation, intent } = tooltipData || {};
+    const medianValue = median(values || [], d => d.value );
+    const oldMedianValue = median(old?.values || [], d => d.value );
+    return (
+      <Fragment>
+        <div className={className} ref={this.holder}></div>
+        <Tooltip show={ !!tooltipData }>
+          <p>{ tooltipData?.indicatorId }</p>
+          <p>
+            <b>Median: { medianValue }</b>
+          </p>
+          <p>
+            <b>Anterior: { oldMedianValue } / { oldClassification }</b>
+          </p>
+          <p>
+            <b>Min / Max: { min } / { max }</b>
+          </p>
+          <p>
+            <b>Quantiles 25 / 50 / 75 (normalizado): { normalQuantile25 } / { normalQuantile50 } / { normalQuantile75 }</b>
+          </p>
+          <p>
+            <b>Desviación estandard: { deviation }</b>
+          </p>
+          <p>
+            <b>Intent: { intent }</b>
+          </p>
+          <p>
+            <b>Estándar: { standard?.value ?? 'sin estándar' }</b>
+          </p>
+        </Tooltip>
+      </Fragment>
+    );
   }
 }
 
@@ -152,7 +190,7 @@ const addPosition = (data, gut, width) => {
 }
 
 const getClassification = (indicator) => {
-  const { values, normalDeviation, standard } = indicator;
+  const { values, normalDeviation, normalQuantile25, normalQuantile50, normalQuantile75, standard } = indicator;
   const std = standard?.normal;
   const medianValue = median(values, d => d.normal);
 
@@ -165,20 +203,9 @@ const getClassification = (indicator) => {
     if (medianValue < std - normalDeviation) return 'high';
   }
   else {
-    if (medianValue >= 75) return 'zero';
-    if (medianValue >= 50) return 'low';
-    if (medianValue >= 25) return 'medium';
-    if (medianValue <  25) return 'high';
+    if (medianValue >= normalQuantile75) return 'zero';
+    if (medianValue >= normalQuantile50) return 'low';
+    if (medianValue >= normalQuantile25) return 'medium';
+    if (medianValue <  normalQuantile25) return 'high';
   }
 }
-
-const bodyOver = (() => {
-  let _callback;
-  document.body.addEventListener('mouseover', () => {
-    _callback && _callback()
-  });
-  document.body.addEventListener('scroll', () => {
-    _callback && _callback()
-  });
-  return (callback) => _callback = callback;
-})();

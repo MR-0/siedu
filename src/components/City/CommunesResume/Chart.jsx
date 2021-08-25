@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { groups, select, sum } from 'd3';
+import { Tooltip } from '../common/Tooltip';
 
 const fills = {
   high: '#EF6350',
@@ -11,6 +12,7 @@ const fills = {
 
 export class Chart extends Component {
   holder = createRef();
+  state = { tooltipData: null };
 
   selectSvg (element) {
     const rect = element.getBoundingClientRect().toJSON();
@@ -58,11 +60,20 @@ export class Chart extends Component {
       .attr('class', 'indicator');
   }
 
+  handleShowTooltip (data) {
+    return (event) => {
+      event.stopPropagation();
+      this.setState({ tooltipData: data });
+    }
+  }
+
   drawStackBars () {
     const { svg, width, height } = this.selectSvg(this.holder.current);
     const { data } = this.props;
     const stack = groupStack(data, width);
-    const g = svg.append('g').attr('class','bar');
+    const g = svg.append('g')
+      .attr('class','bar')
+      .on('mouseover', this.handleShowTooltip(stack));
     this.rects = g.selectAll('rect')
       .data(stack)
       .join('rect')
@@ -114,9 +125,18 @@ export class Chart extends Component {
   
   render () {
     const { className } = this.props;
+    const { tooltipData } = this.state;
+    const total = tooltipData ? sum(tooltipData, d => d.values.length) : 0
     return (
       <div className={ className }>
         <svg ref={ this.holder }></svg>
+        <Tooltip show={ !!tooltipData }>
+          { (tooltipData || []).map(d => (
+            <p>{d.name} : { d.values.length }</p>
+          ))}
+          <hr />
+          <p><b>Total: { total }</b></p>
+        </Tooltip>
       </div>
     );
   }

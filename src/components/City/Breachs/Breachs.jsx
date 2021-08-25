@@ -14,8 +14,7 @@ export const Breachs = () => {
           const { indicatorId:id } = indicator;
           const { values } = metrics.get(id);
           const { value, normal, intended, ...rest } = values[0];
-          const notNullValues = values?.filter(d => d.value !== null) || [];
-          const medianValue = median(notNullValues, d => d.normal);
+          const medianValue = median(values, d => d.normal);
           return { ...indicator, ...rest, values, cityMedian: medianValue };
         });
       const medianValue = median(indicators, d => d.cityMedian);

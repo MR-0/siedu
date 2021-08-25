@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { select } from 'd3';
 import clsx from 'clsx';
+import { Tooltip } from '../common/Tooltip';
 import { SVGBar } from '../common/SVGBar';
 import { Standard } from '../common/Standard';
 import { styles as els } from 'elementary';
@@ -101,7 +102,7 @@ const Body = ({ indicators }) => {
               <Bar
                 className="small gray"
                 data={{
-                  communeName: 'Media nacional',
+                  communeName: 'Mediana nacional',
                   normal: normalMedian
                 }}
                 max={maxValue}
@@ -137,9 +138,9 @@ const Body = ({ indicators }) => {
 }
 
 const Bar = ({ className, data, max }) => {
+  const [ tooltipData, setTooltipData ] = useState(null);
   const { row, middle, col3, gutSm } = els;
   const { bar } = style;
-  // console.log('-->', data);
   const { communeName, normal, value, original, intent, classification } = data;
   const old = data.old?.normal;
   const real = intent === 'boolean' ? original : value;
@@ -151,13 +152,23 @@ const Bar = ({ className, data, max }) => {
     old,
     cat: classification
   }
+  const handleMouseOver = (event) => {
+    event.stopPropagation();
+    setTooltipData({ ...data, old: data.old?.value, standard: data.standard?.value });
+  };
 
   return (
     <li className={clsx(bar, row, middle, gutSm, className)}>
       <h5 className={col3}>{ communeName }</h5>
-      <div className={col3}>
+      <div onMouseOver={ handleMouseOver } className={col3}>
         <SVGBar { ...attrs } />
       </div>
+
+      <Tooltip show={ !!tooltipData }>
+        { Object.entries(tooltipData || {}).map(([key, value]) => (
+          <p>{key} : {value}</p>
+        ))}
+      </Tooltip>
     </li>
   )
 }

@@ -146,6 +146,9 @@ const getFullValues = (values) => {
       normalMin: normalMinValue,
       normalMax: normalMaxValue,
       normalMedian: normalMedianValue,
+      normalQuantile25: normalQuantile25Value,
+      normalQuantile50: normalQuantile50Value,
+      normalQuantile75: normalQuantile75Value,
       normalDeviation: normalDeviationValue,
     };
   });
@@ -165,6 +168,9 @@ const getProps = (values) => {
   const normalMinValue = min(notNullValues, (d) => d.normal);
   const normalMaxValue = max(notNullValues, (d) => d.normal);
   const normalMedianValue = median(values, (d) => d.normal);
+  const normalQuantile25Value = quantile(values, 0.25, (d) => d.normal);
+  const normalQuantile50Value = quantile(values, 0.5, (d) => d.normal);
+  const normalQuantile75Value = quantile(values, 0.75, (d) => d.normal);
   const normalDeviationValue = deviation(values, (d) => d.normal);
   return {
     min: minValue,
@@ -174,6 +180,9 @@ const getProps = (values) => {
     normalMin: normalMinValue,
     normalMax: normalMaxValue,
     normalMedian: normalMedianValue,
+    normalQuantile25: normalQuantile25Value,
+    normalQuantile50: normalQuantile50Value,
+    normalQuantile75: normalQuantile75Value,
     normalDeviation: normalDeviationValue,
   };
 };
