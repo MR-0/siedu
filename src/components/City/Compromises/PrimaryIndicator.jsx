@@ -7,7 +7,7 @@ import style from './PrimaryIndicator.module.scss';
 import clsx from 'clsx';
 
 export const PrimaryIndicator = ({ data }) => {
-  const { normal, normalMax, classification, old, normalMedian, standard, description } = data;
+  const { normal, normalMax, classification, old, normalMedian, standard, description, original: uglyOriginal, unit } = data;
   const part = 0.82;
   const angle = normal * Math.PI * part / normalMax;
   const oldAngle = old.normal * Math.PI * part / old.normalMax;
@@ -15,6 +15,8 @@ export const PrimaryIndicator = ({ data }) => {
   const std = standard?.normal;
   const stdAngle = std && (std * Math.PI * part / normalMax);
   console.log('-->', data.attributeOrd, std, normalMax, stdAngle * 180 / Math.PI);
+  let original = uglyOriginal;
+  original = isNaN(original * 1) ? original : (original * 1).toLocaleString('ES-CL');
   return (
     <div>
       <div className={ style.holder }>
@@ -38,6 +40,10 @@ export const PrimaryIndicator = ({ data }) => {
           radius={ 160 }
           width={ 10 }
         />
+        <dl className={ clsx(style.value, style[classification]) }>
+          <dd>{ original }</dd>
+          <dt>{ unit }</dt>
+        </dl>
         { stdAngle && (
           <ArcStandard
             angle={ stdAngle }

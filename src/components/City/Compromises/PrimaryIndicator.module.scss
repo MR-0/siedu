@@ -14,4 +14,36 @@
   svg:first-child {
     position: relative;
   }
+
+  .value {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 300px;
+    margin: 0 -150px;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 700;
+
+    dd {
+      font-size: 5rem;
+      line-height: 1em;
+    }
+
+    &.zero dd {
+      color: #a8c366;
+    }
+
+    &.low dd {
+      color: #fcdad5;
+    }
+
+    &.medium dd {
+      color: #f5a196;
+    }
+
+    &.high dd {
+      color: #ef6350;
+    }
+  }
 }
