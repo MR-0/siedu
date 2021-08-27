@@ -14,7 +14,7 @@ export const PrimaryIndicator = ({ data }) => {
   const medianAngle = normalMedian * Math.PI * part / normalMax;
   const std = standard?.normal;
   const stdAngle = std && (std * Math.PI * part / normalMax);
-  console.log('-->', data.attributeOrd, std, normalMax, stdAngle * 180 / Math.PI);
+  // console.log('-->', data.attributeOrd, std, normalMax, stdAngle * 180 / Math.PI);
   let original = uglyOriginal;
   original = isNaN(original * 1) ? original : (original * 1).toLocaleString('ES-CL');
   return (
