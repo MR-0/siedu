@@ -6,8 +6,12 @@ import { styles as els } from 'elementary';
 import style from './PrimaryIndicator.module.scss';
 import clsx from 'clsx';
 
+const formatNum = num => (num * 1)
+  .toLocaleString('en-US')
+  .replace(/,/g, '\u202F');
+
 export const PrimaryIndicator = ({ data }) => {
-  const { normal, normalMax, classification, old, normalMedian, standard, description, original: uglyOriginal, unit } = data;
+  const { normal, normalMax, classification, old, normalMedian, standard, description, original: uglyOriginal, unit: uglyUnit } = data;
   const part = 0.82;
   const angle = normal * Math.PI * part / normalMax;
   const oldAngle = old.normal * Math.PI * part / old.normalMax;
@@ -16,7 +20,8 @@ export const PrimaryIndicator = ({ data }) => {
   const stdAngle = std && (std * Math.PI * part / normalMax);
   // console.log('-->', data.attributeOrd, std, normalMax, stdAngle * 180 / Math.PI);
   let original = uglyOriginal;
-  original = isNaN(original * 1) ? original : (original * 1).toLocaleString('ES-CL');
+  original = isNaN(original * 1) ? original : formatNum(original);
+  const unit = uglyUnit.replace(/\d+/, n => formatNum(n));
   return (
     <div>
       <div className={ style.holder }>

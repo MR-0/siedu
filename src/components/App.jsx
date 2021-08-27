@@ -5,6 +5,10 @@ import { City } from './City'
 
 import styles from './App.module.scss';
 
+// TODO:
+// - handle units: % - percentage, m - metters, ha - hectareas
+// - Add config and close icon to config pallette
+
 export const App = () => {
   const { app } = styles;
   return (
