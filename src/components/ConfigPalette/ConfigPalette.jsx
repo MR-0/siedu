@@ -6,6 +6,9 @@ import { ZoneSelector } from './ZoneSelector';
 import { FileName } from './FileName';
 import { useConfigValue } from 'contexts/Config';
 
+import { ReactComponent as ConfigIcon } from './icons/config.svg'
+import { ReactComponent as CloseIcon } from './icons/close.svg';
+
 import style from './ConfigPalette.module.scss';
 import { styles as els } from 'elementary';
 
@@ -78,7 +81,10 @@ export const ConfigPalette = () => {
         href="#open"
         className={style.showButton}
         onClick={handleShow}
-      >{show ? 'close' : 'open'}</a>
+      >{show
+        ? <CloseIcon />
+        : <ConfigIcon />
+      }</a>
       <div className={style.scroll}>
         <h3>Configuración</h3>
         <hr />

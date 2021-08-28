@@ -52,7 +52,7 @@
     letter-spacing: 0.1em;
     color: #333;
     &:hover {
-      background-color: #FFF;
+      background-color: #fff;
     }
   }
 
@@ -63,11 +63,19 @@
   position: absolute;
   top: 50px;
   right: 0;
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   padding-right: 2rem;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
   transform: translateX(100%);
   background-color: rgba(0, 0, 0, 0.8);
+  text-decoration: none;
+  color: #fff;
   cursor: pointer;
+
+  svg {
+    display: block;
+    width: 20px;
+    fill: #fff;
+  }
 }

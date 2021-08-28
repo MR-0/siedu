@@ -20,7 +20,6 @@ export const Compromise  = ({ compromise, commune }) => {
       return { name, icon, indicators, isFirst };
     })
     .sort((a, b) => a.isFirst ? -1 : b.isFirst ? 1 : 0);
-  console.log(attributes);
   
   return (
     <section>
