@@ -28,6 +28,14 @@
     dd {
       font-size: 5rem;
       line-height: 1em;
+
+      .unit {
+        display: inline-block;
+        margin-left: 0.3em;
+        vertical-align: baseline;
+        font-size: 50%;
+        line-height: 1em;
+      }
     }
 
     &.zero dd {

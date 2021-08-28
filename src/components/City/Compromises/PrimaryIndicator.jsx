@@ -22,6 +22,7 @@ export const PrimaryIndicator = ({ data }) => {
   let original = uglyOriginal;
   original = isNaN(original * 1) ? original : formatNum(original);
   const unit = uglyUnit.replace(/\d+/, n => formatNum(n));
+  const isSmallUnit = ['%', 'm', 'ha'].some(d => d === unit);
   return (
     <div>
       <div className={ style.holder }>
@@ -46,8 +47,11 @@ export const PrimaryIndicator = ({ data }) => {
           width={ 10 }
         />
         <dl className={ clsx(style.value, style[classification]) }>
-          <dd>{ original }</dd>
-          <dt>{ unit }</dt>
+          <dd>
+            <span>{ original }</span>
+            { isSmallUnit && <span className={ style.unit }>{ unit }</span> }
+          </dd>
+          { !isSmallUnit && <dt>{ unit }</dt> }
         </dl>
         { stdAngle && (
           <ArcStandard
