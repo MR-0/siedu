@@ -1,7 +1,7 @@
 .holder {
   position: relative;
   margin-bottom: 1rem;
-  padding-top: 2rem;
+  // padding-top: 2rem;
 
   svg {
     display: block;
@@ -9,6 +9,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    border: 1px solid red;
   }
 
   svg:first-child {

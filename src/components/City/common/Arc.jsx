@@ -5,8 +5,9 @@ import style from './Arc.module.scss';
 
 let count = 0;
 
-export const Arc = ({ radius, width, angle, type, label }) => {
+export const Arc = ({ radius, width, angle, type, label, ...attrs }) => {
   const ref = useRef();
+  const [ rect, setRect ] = useState({});
   const [ path, setPath ] = useState(null);
   const arcValue = arc()({
     innerRadius: radius - width * 0.5,
@@ -21,8 +22,9 @@ export const Arc = ({ radius, width, angle, type, label }) => {
 
   useEffect(() => {
     const svg = select(ref.current);
+    const rect = ref.current.getBoundingClientRect();
     const href = 'text-path-' + Date.now() + '-' + count;
-    const { width, height } = ref.current.getBoundingClientRect();
+    const { width, height } = rect;
     const group = svg.append('g')
       .attr('transform', `translate(${ width *0.5 }, ${ height })`);
     const guide = group
@@ -54,12 +56,15 @@ export const Arc = ({ radius, width, angle, type, label }) => {
       .attr('startOffset', '50%')
       .text(label);
     setPath(path);
+    setRect(rect);
     count++;
   }, []);
 
   return <svg
+    { ...attrs }
     className={ style.arc }
     height={ radius + width * 0.5 + 1 }
-    width={ radius + width * 0.5 + 1 }
+    width={ rect.width }
+    viewBox={ `0 0 ${ rect.width || 0 } ${ rect.height || 0 }`}
     ref={ ref } ></svg>;
 };
