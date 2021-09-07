@@ -1,5 +1,5 @@
 import React from 'react';
-import { Arc } from '../common/Arc';
+import { ArcSvg } from '../common/ArcSvg';
 import { ArcStandard } from '../common/ArcStandard';
 
 import { styles as els } from 'elementary';
@@ -26,26 +26,32 @@ export const PrimaryIndicator = ({ data }) => {
   return (
     <div>
       <div className={ style.holder }>
-        <Arc
-          label="Medición Anterior"
-          angle={ oldAngle }
-          type={ old.classification }
-          radius={ 200 }
-          width={ 10 }
-        />
-        <Arc
-          label="Medición Actual"
-          angle={ angle }
-          type={ classification }
-          radius={ 180 }
-          width={ 20 }
-        />
-        <Arc
-          label="Mediana nacional"
-          angle={ medianAngle }
-          radius={ 160 }
-          width={ 10 }
-        />
+        <svg
+          height="240"
+          width="480"
+          viewBox="0 0 480 240"
+        >
+          <ArcSvg
+            label="Medición Anterior"
+            angle={ oldAngle }
+            type={ old.classification }
+            radius={ 200 }
+            width={ 10 }
+          />
+          <ArcSvg
+            label="Medición Actual"
+            angle={ angle }
+            type={ classification }
+            radius={ 180 }
+            width={ 20 }
+          />
+          <ArcSvg
+            label="Mediana nacional"
+            angle={ medianAngle }
+            radius={ 160 }
+            width={ 10 }
+          />
+        </svg>
         <dl className={ clsx(style.value, style[classification]) }>
           <dd>
             <span>{ original }</span>

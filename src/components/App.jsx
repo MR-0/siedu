@@ -8,6 +8,8 @@ import styles from './App.module.scss';
 // TODO:
 // - Add tooltip
 // - Fix print
+// - Cerrar el panel de config al aceptar e imprimir
+// - Comprimir modulos de comuna para minimizar espacio vertical
 
 export const App = () => {
   const { app } = styles;
