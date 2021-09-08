@@ -13,7 +13,7 @@ import style from './ConfigPalette.module.scss';
 import { styles as els } from 'elementary';
 
 import evolutionIconsFont from '../../styles/fonts/evolution-icon.woff';
-import { select } from 'd3';
+import { hierarchy, select } from 'd3';
 
 const fetchEvolutionIconsFont = (() => {
   let result;
@@ -71,6 +71,12 @@ export const ConfigPalette = () => {
         .then(result => {
           select(holder)
             .selectAll('svg')
+            .each(function () {
+              const { height, width } = this.getBoundingClientRect();
+              select(this)
+                .attr('width', width)
+                .attr('height', height)
+            })
             .insert('style', ':first-child')
             .attr('type', 'text/css')
             .text(
