@@ -34,7 +34,52 @@ const fileReader = blob => new Promise(resolve => {
   const reader = new FileReader();
   reader.readAsDataURL(blob);
   reader.onloadend = () => resolve(reader.result);
-})
+});
+
+const printSections = async (sections, name) => {
+  const sectionsArr = Array.from(sections);
+  const iconstFontFileStr = await fetchEvolutionIconsFont();
+  const canvasPromises = sectionsArr.map((section, i) => {
+    const n = i + 1;
+    const holder = document.createElement('div');
+
+    holder.className = 'toprint';
+    holder.innerHTML = section.outerHTML;
+
+    document.body.appendChild(holder);
+
+    const svgs = select(holder).selectAll('svg');
+    
+    svgs.each(function () {
+      const { height, width } = this.getBoundingClientRect();
+      const svg = select(this)
+        .attr('width', width)
+        .attr('height', height)
+      const style = svg.insert('style', ':first-child')
+        .attr('type', 'text/css')
+        .text(`@font-face {
+          font-family: 'evolution-icon';
+          src: url('${iconstFontFileStr}') format('woff');
+          font-weight: normal;
+          font-style: normal;
+        }`);
+    });
+
+      return html2canvas(holder, { scale: 2 }).then(canvas => {
+        return { canvas, holder } ;
+      });
+  });
+  const canvasResults = await Promise.all(canvasPromises);
+
+  return canvasResults.map(({ canvas, holder }, i) => {
+    const anchor = document.createElement('a');
+    anchor.download = name + (i + '').padStart(3, '0');
+    anchor.href = canvas.toDataURL();
+    anchor.click();
+    document.body.removeChild(holder);
+    return canvas;
+  });
+}
 
 export const ConfigPalette = () => {
   const { year, setConfig } = useConfigValue();
@@ -53,55 +98,11 @@ export const ConfigPalette = () => {
   };
   const handlePrinter = e => {
     e.preventDefault();
-
-    setShow(false);
-
     const sections = document.querySelectorAll('section');
 
-    Array.from(sections).map((section, i) => {
-      const n = i + 1;
-      const holder = document.createElement('div');
-
-      holder.className = 'toprint';
-      holder.innerHTML = section.outerHTML;
-
-      document.body.appendChild(holder);
-
-      return fetchEvolutionIconsFont()
-        .then(result => {
-          select(holder)
-            .selectAll('svg')
-            .each(function () {
-              const { height, width } = this.getBoundingClientRect();
-              select(this)
-                .attr('width', width)
-                .attr('height', height)
-            })
-            .insert('style', ':first-child')
-            .attr('type', 'text/css')
-            .text(
-              `@font-face {
-                font-family: 'evolution-icon';
-                src: url('${result}') format('woff');
-                font-weight: normal;
-                font-style: normal;
-              }
-              `
-            );
-        })
-        .then(() => {
-          window.scrollTo(0, 0);
-          return html2canvas(holder, { scale: 2 }).then(canvas => {
-            const anchor = document.createElement('a');
-            anchor.download = name + (n + '').padStart(3, '0');
-            anchor.href = canvas.toDataURL();
-            anchor.click();
-            document.body.removeChild(holder);
-          });
-        });
-    });
-
-  }
+    setShow(false);
+    printSections(sections, name);
+  };
 
   return (
     <div className={clsx(style.panel, show && style.show)}>
