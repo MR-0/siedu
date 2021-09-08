@@ -22,7 +22,7 @@ export const Compromise  = ({ compromise, commune }) => {
     .sort((a, b) => a.isFirst ? -1 : b.isFirst ? 1 : 0);
   
   return (
-    <section>
+    <section className="print-long">
       <Header subtitle={ name } number={ number }>
         <p>{ description }</p>
       </Header>

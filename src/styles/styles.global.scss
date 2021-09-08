@@ -43,6 +43,10 @@ section,
     margin: 5px;
     padding: 0;
     border-bottom: none;
+
+    &.print-long {
+      max-height: none;
+    }
   }
 
   img {

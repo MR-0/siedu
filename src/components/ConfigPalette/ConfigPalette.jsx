@@ -22,6 +22,7 @@ export const ConfigPalette = () => {
   const [name, setName] = useState('');
   const handleApplyConfig = e => {
     e.preventDefault();
+    setShow(false);
     setConfig(preConfig);
   };
   const handleChangeName = name => setName(name);
@@ -31,6 +32,8 @@ export const ConfigPalette = () => {
   };
   const handlePrinter = e => {
     e.preventDefault();
+
+    setShow(false);
 
     const sections = document.querySelectorAll('section');
 

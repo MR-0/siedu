@@ -7,12 +7,12 @@ import { BooleanIcon } from '../common/BooleanIcon';
 import { styles as els } from 'elementary';
 import style from './Compromise.module.scss';
 
-export const Indicator = ({ data }) => {
+export const Indicator = ({ data, isOne }) => {
   const { description, normalMedian, normalMax, standard, value, normal, original, old, classification, intent } = data;
   const isBoolean = intent === 'boolean';
   const max = Math.max(normalMax, standard.normal || 0);
   return (
-    <div className={ clsx(style.indicator, els.col2) }>
+    <div className={ clsx(style.indicator, !isOne && els.col2, isOne && els.col4) }>
       <div className={ style.bars }>
         { isBoolean && (
           <BooleanIcon valuie={value} />
