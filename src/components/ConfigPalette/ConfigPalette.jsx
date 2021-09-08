@@ -12,8 +12,29 @@ import { ReactComponent as CloseIcon } from './icons/close.svg';
 import style from './ConfigPalette.module.scss';
 import { styles as els } from 'elementary';
 
-import evolutionIcons from '../../styles/fonts/evolution-icon.woff';
+import evolutionIconsFont from '../../styles/fonts/evolution-icon.woff';
 import { select } from 'd3';
+
+const fetchEvolutionIconsFont = (() => {
+  let result;
+  
+  const fetchResult = async () => {
+    const response = await fetch(evolutionIconsFont);
+    const blob = await response.blob();
+    result = await fileReader(blob);
+    return result;
+  };
+
+  return async () => {
+    return result || await fetchResult(); 
+  };
+})();
+
+const fileReader = blob => new Promise(resolve => {
+  const reader = new FileReader();
+  reader.readAsDataURL(blob);
+  reader.onloadend = () => resolve(reader.result);
+})
 
 export const ConfigPalette = () => {
   const { year, setConfig } = useConfigValue();
@@ -46,9 +67,7 @@ export const ConfigPalette = () => {
 
       document.body.appendChild(holder);
 
-      return fetch(evolutionIcons)
-        .then(response => response.blob())
-        .then(blob => fileReader(blob))
+      return fetchEvolutionIconsFont()
         .then(result => {
           select(holder)
             .selectAll('svg')
@@ -109,9 +128,3 @@ export const ConfigPalette = () => {
     </div >
   )
 }
-
-const fileReader = blob => new Promise(resolve => {
-  const reader = new FileReader();
-  reader.readAsDataURL(blob);
-  reader.onloadend = () => resolve(reader.result);
-})
