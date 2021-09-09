@@ -27,10 +27,8 @@ export const ArcStandard = ({ radius, width, angle, className }) => {
     .attr('text-anchor', isOverHalf ? 'end' : 'start');
 
   useEffect(() => {
-    const svg = select(ref.current);
-    const { width, height } = ref.current.getBoundingClientRect();
-    const group = svg
-      .append('g')
+    const { width, height } = ref.current.parentNode.getBoundingClientRect();
+    const group = select(ref.current)
       .attr('transform', `translate(${ width * 0.5 }, ${ height })`)
     const line = group.append('line');
     const text = group
@@ -43,7 +41,7 @@ export const ArcStandard = ({ radius, width, angle, className }) => {
 
   return <g
     className={ clsx(style.svg, className) }
-    height={ radius + width * 0.5 + 1 }
-    width={ radius + width * 0.5 + 1 }
+    // height={ radius + width * 0.5 + 1 }
+    // width={ radius + width * 0.5 + 1 }
     ref={ ref }></g>;
 }

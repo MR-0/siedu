@@ -76,6 +76,7 @@ const printSections = async (sections, name) => {
     anchor.download = name + (n + '').padStart(3, '0');
     anchor.href = canvas.toDataURL();
     anchor.click();
+    document.body.removeChild(holder);
     return canvas;
   });
 }

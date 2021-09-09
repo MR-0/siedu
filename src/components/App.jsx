@@ -6,7 +6,6 @@ import { City } from './City'
 import styles from './App.module.scss';
 
 // TODO:
-// - Fix print
 // - Add tooltip
 
 export const App = () => {
