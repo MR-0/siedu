@@ -39,8 +39,7 @@ const fileReader = blob => new Promise(resolve => {
 const printSections = async (sections, name) => {
   const sectionsArr = Array.from(sections);
   const iconstFontFileStr = await fetchEvolutionIconsFont();
-  const canvasPromises = sectionsArr.map((section, i) => {
-    const n = i + 1;
+  const canvasPromises = sectionsArr.map((section) => {
     const holder = document.createElement('div');
 
     holder.className = 'toprint';
@@ -54,7 +53,7 @@ const printSections = async (sections, name) => {
       const { height, width } = this.getBoundingClientRect();
       const svg = select(this)
         .attr('width', width)
-        .attr('height', height)
+        .attr('height', height);
       const style = svg.insert('style', ':first-child')
         .attr('type', 'text/css')
         .text(`@font-face {
@@ -72,11 +71,11 @@ const printSections = async (sections, name) => {
   const canvasResults = await Promise.all(canvasPromises);
 
   return canvasResults.map(({ canvas, holder }, i) => {
+    const n = i + 1;
     const anchor = document.createElement('a');
-    anchor.download = name + (i + '').padStart(3, '0');
+    anchor.download = name + (n + '').padStart(3, '0');
     anchor.href = canvas.toDataURL();
     anchor.click();
-    document.body.removeChild(holder);
     return canvas;
   });
 }

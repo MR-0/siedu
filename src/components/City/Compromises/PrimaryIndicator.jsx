@@ -18,7 +18,6 @@ export const PrimaryIndicator = ({ data }) => {
   const medianAngle = normalMedian * Math.PI * part / normalMax;
   const std = standard?.normal;
   const stdAngle = std && (std * Math.PI * part / normalMax);
-  // console.log('-->', data.attributeOrd, std, normalMax, stdAngle * 180 / Math.PI);
   let original = uglyOriginal;
   original = isNaN(original * 1) ? original : formatNum(original);
   const unit = uglyUnit.replace(/\d+/, n => formatNum(n));
@@ -27,9 +26,9 @@ export const PrimaryIndicator = ({ data }) => {
     <div>
       <div className={ style.holder }>
         <svg
+          className="chart-gauge"
           height="240"
-          width="480"
-          viewBox="0 0 480 240"
+          width="620"
         >
           <ArcSvg
             label="Medición Anterior"
@@ -61,6 +60,7 @@ export const PrimaryIndicator = ({ data }) => {
         </dl>
         { stdAngle && (
           <ArcStandard
+            className={ style.standard }
             angle={ stdAngle }
             radius={ 180 }
             width={ 70 }

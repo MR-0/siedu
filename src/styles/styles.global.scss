@@ -53,6 +53,10 @@ section,
     width: auto !important;
   }
 
+  svg.chart-gauge {
+    left: -30px;
+  }
+
   svg {
     font-family: 'Roboto';
   }

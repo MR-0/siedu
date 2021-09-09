@@ -1,18 +1,16 @@
 .holder {
-  position: relative;
   margin-bottom: 1rem;
-  // padding-top: 2rem;
 
   svg {
     display: block;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 0 auto;
   }
 
-  svg:first-child {
-    position: relative;
+  .standard {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
   }
 
   .value {
@@ -20,10 +18,10 @@
     left: 50%;
     bottom: 0;
     width: 300px;
-    margin: 0 -150px;
     padding: 1rem;
     text-align: center;
     font-weight: 700;
+    transform: translateX(-50%);
 
     dd {
       font-size: 5rem;

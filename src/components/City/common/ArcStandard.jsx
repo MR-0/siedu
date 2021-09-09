@@ -2,8 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import { select } from 'd3';
 
 import style from './ArcStandard.module.scss';
+import clsx from 'clsx';
 
-export const ArcStandard = ({ radius, width, angle }) => {
+export const ArcStandard = ({ radius, width, angle, className }) => {
   const ref = useRef();
   const [ line, setLine ] = useState(null);
   const [ text, setText ] = useState(null);
@@ -41,7 +42,7 @@ export const ArcStandard = ({ radius, width, angle }) => {
   }, []);
 
   return <svg
-    className={ style.svg }
+    className={ clsx(style.svg, className) }
     height={ radius + width * 0.5 + 1 }
     width={ radius + width * 0.5 + 1 }
     ref={ ref }></svg>;
