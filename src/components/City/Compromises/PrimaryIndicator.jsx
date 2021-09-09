@@ -23,7 +23,6 @@ export const PrimaryIndicator = ({ data }) => {
   original = isNaN(original * 1) ? original : formatNum(original);
   const unit = uglyUnit.replace(/\d+/, n => formatNum(n));
   const isSmallUnit = ['%', 'm', 'ha'].some(d => d === unit);
-  console.log('-->', standard);
   return (
     <div>
       <div className={ style.holder }>
