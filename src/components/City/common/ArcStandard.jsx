@@ -41,9 +41,9 @@ export const ArcStandard = ({ radius, width, angle, className }) => {
     setText(text);
   }, []);
 
-  return <svg
+  return <g
     className={ clsx(style.svg, className) }
     height={ radius + width * 0.5 + 1 }
     width={ radius + width * 0.5 + 1 }
-    ref={ ref }></svg>;
+    ref={ ref }></g>;
 }

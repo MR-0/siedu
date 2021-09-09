@@ -50,6 +50,14 @@ export const PrimaryIndicator = ({ data }) => {
             radius={ 160 }
             width={ 10 }
           />
+          { stdAngle && (
+            <ArcStandard
+              className={ style.standard }
+              angle={ stdAngle }
+              radius={ 180 }
+              width={ 70 }
+            />
+          )}
         </svg>
         <dl className={ clsx(style.value, style[classification]) }>
           <dd>
@@ -58,14 +66,6 @@ export const PrimaryIndicator = ({ data }) => {
           </dd>
           { !isSmallUnit && <dt>{ unit }</dt> }
         </dl>
-        { stdAngle && (
-          <ArcStandard
-            className={ style.standard }
-            angle={ stdAngle }
-            radius={ 180 }
-            width={ 70 }
-          />
-        )}
       </div>
       <div className={ clsx(els.max500, els.blockCenter ) }>
         <p className={ clsx(els.textCenter, els.textLg ) }>{ description }</p>
