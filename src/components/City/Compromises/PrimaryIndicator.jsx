@@ -4,6 +4,7 @@ import { ArcStandard } from '../common/ArcStandard';
 
 import { styles as els } from 'elementary';
 import style from './PrimaryIndicator.module.scss';
+import indicatorStyle from './Compromise.module.scss';
 import clsx from 'clsx';
 
 const formatNum = num => (num * 1)
@@ -22,6 +23,7 @@ export const PrimaryIndicator = ({ data }) => {
   original = isNaN(original * 1) ? original : formatNum(original);
   const unit = uglyUnit.replace(/\d+/, n => formatNum(n));
   const isSmallUnit = ['%', 'm', 'ha'].some(d => d === unit);
+  console.log('-->', standard);
   return (
     <div>
       <div className={ style.holder }>
@@ -67,8 +69,11 @@ export const PrimaryIndicator = ({ data }) => {
           { !isSmallUnit && <dt>{ unit }</dt> }
         </dl>
       </div>
-      <div className={ clsx(els.max500, els.blockCenter ) }>
-        <p className={ clsx(els.textCenter, els.textLg ) }>{ description }</p>
+      <div className={ clsx(els.max500, els.blockCenter, els.mar ) }>
+        <p className={ clsx(els.textCenter, els.textLg, els.marSm ) }>{ description }</p>
+        { standard.type === 'std' && (
+          <p className={indicatorStyle.standard}>Estándar: { standard.name }</p>
+        ) }
       </div>
     </div>
   )

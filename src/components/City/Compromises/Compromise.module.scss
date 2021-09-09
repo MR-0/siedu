@@ -44,15 +44,21 @@
     margin-bottom: 0.3rem;
   }
   .standard {
-    display: table;
     padding: 0.2rem 1rem;
-    border-radius: 9999px;
-    background-color: #222;
     font-size: 0.8rem;
-    text-align: center;
-    color: #fff;
   }
   p {
     font-size: 1.3rem;
   }
+}
+
+.standard {
+  display: table;
+  margin: 0 auto;
+  padding: 0.3rem 1.3rem;
+  border-radius: 9999px;
+  background-color: #222;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #fff;
 }
