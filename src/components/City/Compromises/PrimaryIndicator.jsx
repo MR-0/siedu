@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArcSvg } from '../common/ArcSvg';
 import { ArcStandard } from '../common/ArcStandard';
+import { Tooltip } from '../common/Tooltip';
 
 import { styles as els } from 'elementary';
 import style from './PrimaryIndicator.module.scss';
@@ -12,6 +13,7 @@ const formatNum = num => (num * 1)
   .replace(/,/g, '\u202F');
 
 export const PrimaryIndicator = ({ data }) => {
+  const [ tooltipData, setTooltipData ] = useState(null);
   const { normal, normalMax, classification, old, normalMedian, standard, description, original: uglyOriginal, unit: uglyUnit } = data;
   const part = 0.82;
   const angle = normal * Math.PI * part / normalMax;
@@ -23,6 +25,10 @@ export const PrimaryIndicator = ({ data }) => {
   original = isNaN(original * 1) ? original : formatNum(original);
   const unit = uglyUnit.replace(/\d+/, n => formatNum(n));
   const isSmallUnit = ['%', 'm', 'ha'].some(d => d === unit);
+  const handleHover = (e) => {
+    e.stopPropagation();
+    setTooltipData({ ...data, old: data.old?.value, standard: data.standard?.value });
+  };
   return (
     <div>
       <div className={ style.holder }>
@@ -30,6 +36,7 @@ export const PrimaryIndicator = ({ data }) => {
           className="chart-gauge"
           height="240"
           width="620"
+          onMouseOver={ handleHover }
         >
           <ArcSvg
             label="Medición Anterior"
@@ -74,6 +81,11 @@ export const PrimaryIndicator = ({ data }) => {
           <p className={indicatorStyle.standard}>Estándar: { standard.name }</p>
         ) }
       </div>
+      <Tooltip show={ !!tooltipData }>
+        { Object.entries(tooltipData || {}).map(([key, value]) => (
+          <p>{key} : {value}</p>
+        ))}
+      </Tooltip>
     </div>
   )
 }

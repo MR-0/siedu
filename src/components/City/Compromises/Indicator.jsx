@@ -1,18 +1,27 @@
-import React, { Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import clsx from 'clsx';
 import { SVGBar } from '../common/SVGBar';
 import { Standard } from '../common/Standard';
 import { BooleanIcon } from '../common/BooleanIcon';
+import { Tooltip } from '../common/Tooltip';
 
 import { styles as els } from 'elementary';
 import style from './Compromise.module.scss';
 
 export const Indicator = ({ data, isOne }) => {
+  const [ tooltipData, setTooltipData ] = useState(null);
   const { description, normalMedian, normalMax, standard, value, normal, original, old, classification, intent } = data;
   const isBoolean = intent === 'boolean';
   const max = Math.max(normalMax, standard.normal || 0);
+  const handleHover = (e) => {
+    e.stopPropagation();
+    setTooltipData({ ...data, old: data.old?.value, standard: data.standard?.value });
+  };
   return (
-    <div className={ clsx(style.indicator, !isOne && els.col2, isOne && els.col4) }>
+    <div
+    className={ clsx(style.indicator, !isOne && els.col2, isOne && els.col4) }
+    onMouseOver={ handleHover }
+    >
       <div className={ style.bars }>
         { isBoolean && (
           <BooleanIcon valuie={value} />
@@ -32,6 +41,11 @@ export const Indicator = ({ data, isOne }) => {
       { standard.type === 'std' && (
         <p className={style.standard}>Estándar: { standard.name }</p>
       ) }
+      <Tooltip show={ !!tooltipData }>
+        { Object.entries(tooltipData || {}).map(([key, value]) => (
+          <p>{key} : {value}</p>
+        ))}
+      </Tooltip>
     </div>
   );
 };
