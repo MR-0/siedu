@@ -11,6 +11,7 @@
   color: #fff;
   transform: translateX(-100%);
   transition: transform ease-out 0.3s;
+  z-index: 1000;
 
   &.show {
     transform: translateX(0);
@@ -55,8 +56,6 @@
       background-color: #fff;
     }
   }
-
-  z-index: 100;
 }
 
 .showButton {
