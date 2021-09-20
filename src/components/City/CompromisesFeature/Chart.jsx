@@ -103,7 +103,7 @@ export class Chart extends Component {
         if (old === -1 || current === -1) return '';
         if (current > old) return 'a';
         if (current < old) return 'b';
-        if (current === old) return 'c';
+        if (current === old) return '';
         return '';
       })
   }
